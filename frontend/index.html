@@ -513,6 +513,12 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;justify-cont
 <canvas id="workCanvas"></canvas>
 
 <script>
+// =========== BACKEND API URL ===========
+// While running locally: uses http://localhost:3000
+// After deploying to Render: change to your Render URL like:
+// const API_BASE = 'https://your-app-name.onrender.com';
+const API_BASE = window.location.origin;
+
 // =========== TOOL DEFINITIONS ===========
 const TOOLS = {
   // -------- IMAGE COMPRESS --------
@@ -739,18 +745,14 @@ const TOOLS = {
   'pdf-protect': {
     title: '🔒 Protect PDF',
     html: `
-      <div class="result-box" style="border-color:var(--accent3);">
-        <strong style="color:var(--accent3);">ℹ️ Note:</strong> PDF password protection requires a server-side component. This frontend-only demo shows the UI. To implement: use a Node.js backend with <strong>pdf-lib</strong> or <strong>hummus</strong> library.
+      <div class="drop-zone" onclick="document.getElementById('ppFile').click()">
+        <input type="file" id="ppFile" accept=".pdf" onchange="ppFileLoad(this)"/>
+        <div class="drop-icon">🔒</div>
+        <div class="drop-text">Click to upload PDF</div>
       </div>
-      <div style="margin-top:16px;">
-        <div class="drop-zone" onclick="document.getElementById('ppFile').click()">
-          <input type="file" id="ppFile" accept=".pdf"/>
-          <div class="drop-icon">🔒</div>
-          <div class="drop-text">Click to upload PDF</div>
-        </div>
-        <div class="form-group" style="margin-top:16px;"><label>Password</label><input type="text" id="ppPass" placeholder="Enter password"/></div>
-        <div class="btn-row"><button class="btn" onclick="alert('Backend needed! Use pdf-lib on Node.js server.')">🔒 Protect PDF</button></div>
-      </div>`
+      <div id="ppInfo" class="result-box" style="display:none;margin-top:12px;"></div>
+      <div class="form-group" style="margin-top:16px;"><label>Password</label><input type="password" id="ppPass" placeholder="Enter a password to lock the PDF"/></div>
+      <div class="btn-row"><button class="btn" onclick="ppProtect()">🔒 Protect PDF & Download</button></div>`
   },
 
   // -------- IMG CROP --------
@@ -1509,19 +1511,44 @@ async function itpConvert() {
   w.print();
 }
 
-// ========= PDF COMPRESS (simulated) =========
+// ========= PDF COMPRESS (real backend) =========
 function pcLoad(input) {
   const file = input.files[0]; if(!file) return;
-  const r=document.getElementById('pcResult'); r.style.display='block';
-  r.innerHTML='⏳ Analyzing PDF...';
-  setTimeout(()=>{
-    const origKB=(file.size/1024).toFixed(1);
-    const estNew=(file.size*0.6/1024).toFixed(1);
-    r.innerHTML=`📄 <strong>${file.name}</strong> (${origKB} KB)<br/>Estimated compressed: ~<strong>${estNew} KB</strong><br/><br/>⚠️ <em>Full PDF compression requires a backend. Use Node.js + <strong>ghostscript</strong> or <strong>ilovepdf API</strong> for real compression.</em>`;
-    const btns=document.getElementById('pcBtns');
-    btns.style.display='flex';
-    btns.innerHTML=`<button class="btn btn-outline" onclick="alert('Backend needed for real PDF compression!')">Download Compressed PDF</button>`;
-  },1000);
+  imgState.pcFile = file;
+  const r = document.getElementById('pcResult');
+  r.style.display = 'block';
+  const origKB = (file.size/1024).toFixed(1);
+  r.innerHTML = `📄 <strong>${file.name}</strong> — ${origKB} KB<br/><span style="color:var(--text2);font-size:.85rem;">Ready to compress. Click the button below.</span>`;
+  const btns = document.getElementById('pcBtns');
+  btns.style.display = 'flex';
+  btns.innerHTML = `<button class="btn" onclick="pcCompress()">🗜️ Compress & Download</button>`;
+}
+
+async function pcCompress() {
+  const file = imgState.pcFile; if(!file) return;
+  const r = document.getElementById('pcResult');
+  const btn = document.querySelector('#pcBtns .btn');
+  btn.textContent = '⏳ Compressing...'; btn.disabled = true;
+  r.innerHTML = '⏳ Sending to server...';
+  try {
+    const formData = new FormData();
+    formData.append('pdf', file);
+    const res = await fetch(`${API_BASE}/api/pdf/compress`, { method:'POST', body:formData });
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error||'Server error'); }
+    const origSize  = parseInt(res.headers.get('X-Original-Size')||file.size);
+    const newSize   = parseInt(res.headers.get('X-Compressed-Size')||0);
+    const saved     = newSize ? Math.max(0,Math.round((1-newSize/origSize)*100)) : 0;
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href=url; a.download='compressed.pdf'; a.click();
+    r.innerHTML = `✅ Done!<br/>Original: <strong>${(origSize/1024).toFixed(1)} KB</strong> → Compressed: <strong>${(newSize/1024).toFixed(1)} KB</strong> | Saved: <strong style="color:var(--accent)">${saved}%</strong>`;
+    r.className = 'result-box success';
+    btn.textContent = '🗜️ Compress Again'; btn.disabled = false;
+  } catch(e) {
+    r.innerHTML = `❌ Error: ${e.message}`;
+    r.className = 'result-box error';
+    btn.textContent = '🗜️ Compress & Download'; btn.disabled = false;
+  }
 }
 
 // ========= PDF TO IMAGE =========
@@ -1557,33 +1584,116 @@ async function ptiLoad(input) {
   }
 }
 
-// ========= PDF MERGE =========
+// ========= PDF MERGE (real backend) =========
 function pmLoad(input) {
-  const files=Array.from(input.files); if(!files.length) return;
-  imgState.pmFiles=files;
-  const list=document.getElementById('pmList');
-  list.innerHTML=files.map((f,i)=>`<div style="padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:.85rem;">📄 ${f.name} <span style="color:var(--text2)">(${(f.size/1024).toFixed(1)} KB)</span></div>`).join('');
-  const btns=document.getElementById('pmBtns');
-  btns.style.display='flex';
-  btns.innerHTML=`<button class="btn" onclick="alert('PDF merging requires a backend (Node.js + pdf-lib). This UI is ready for integration!')">📑 Merge & Download</button>`;
+  const files = Array.from(input.files); if(!files.length) return;
+  imgState.pmFiles = files;
+  const list = document.getElementById('pmList');
+  list.innerHTML = files.map((f,i) => `
+    <div style="padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:.85rem;display:flex;justify-content:space-between;align-items:center;">
+      <span>📄 <strong>${f.name}</strong></span>
+      <span style="color:var(--text2)">${(f.size/1024).toFixed(1)} KB</span>
+    </div>`).join('');
+  const btns = document.getElementById('pmBtns');
+  btns.style.display = 'flex';
+  btns.innerHTML = `<button class="btn" onclick="pmMerge()">📑 Merge ${files.length} PDFs & Download</button>`;
 }
 
-// ========= PDF SPLIT =========
+async function pmMerge() {
+  const files = imgState.pmFiles; if(!files||files.length<2){ alert('Upload at least 2 PDF files'); return; }
+  const btn = document.querySelector('#pmBtns .btn');
+  btn.textContent = '⏳ Merging...'; btn.disabled = true;
+  try {
+    const formData = new FormData();
+    files.forEach(f => formData.append('pdfs', f));
+    const res = await fetch(`${API_BASE}/api/pdf/merge`, { method:'POST', body:formData });
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error||'Server error'); }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href=url; a.download='merged.pdf'; a.click();
+    btn.textContent = '✅ Merged! Download again?'; btn.disabled = false;
+  } catch(e) {
+    alert('❌ Error: ' + e.message);
+    btn.textContent = '📑 Merge & Download'; btn.disabled = false;
+  }
+}
+
+// ========= PDF SPLIT (real backend) =========
 async function psLoad(input) {
   const file=input.files[0]; if(!file) return;
+  imgState.psFile = file;
   try {
     pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     const ab=await file.arrayBuffer();
     const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-    imgState.psPDF=ab; imgState.psTotal=pdf.numPages;
+    imgState.psTotal=pdf.numPages;
     document.getElementById('psControls').style.display='block';
-    document.getElementById('psInfo').textContent=`📄 ${file.name} — ${pdf.numPages} pages`;
+    document.getElementById('psInfo').textContent=`📄 ${file.name} — ${pdf.numPages} pages total`;
   } catch(e) {
     alert('Could not read PDF: '+e.message);
   }
 }
-function psSplit() {
-  alert('PDF page extraction requires a backend (Node.js + pdf-lib). The UI and page detection are ready!');
+
+async function psSplit() {
+  const file = imgState.psFile; if(!file){ alert('Upload a PDF first'); return; }
+  const pages = document.getElementById('psPages').value.trim();
+  const btn = document.querySelector('[onclick="psSplit()"]');
+  btn.textContent = '⏳ Extracting...'; btn.disabled = true;
+  try {
+    const formData = new FormData();
+    formData.append('pdf', file);
+    if(pages) formData.append('pages', pages);
+    const res = await fetch(`${API_BASE}/api/pdf/split`, { method:'POST', body:formData });
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error||'Server error'); }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href=url; a.download='split.pdf'; a.click();
+    btn.textContent = '✅ Done! Extract again?'; btn.disabled = false;
+  } catch(e) {
+    alert('❌ Error: ' + e.message);
+    btn.textContent = '✂️ Extract Pages'; btn.disabled = false;
+  }
+}
+
+// ========= PDF PROTECT (real backend) =========
+function ppFileLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  imgState.ppFile = file;
+  const info = document.getElementById('ppInfo');
+  info.style.display = 'block';
+  info.textContent = `📄 ${file.name} — ${(file.size/1024).toFixed(1)} KB — Ready to protect`;
+}
+
+async function ppProtect() {
+  const file = imgState.ppFile;
+  const pass = document.getElementById('ppPass')?.value?.trim();
+  if(!file){ alert('Upload a PDF first'); return; }
+  if(!pass){ alert('Enter a password'); return; }
+  const btn = document.querySelector('[onclick="ppProtect()"]');
+  btn.textContent = '⏳ Protecting...'; btn.disabled = true;
+  try {
+    const formData = new FormData();
+    formData.append('pdf', file);
+    formData.append('password', pass);
+    const res = await fetch(`${API_BASE}/api/pdf/protect`, { method:'POST', body:formData });
+    if(res.status === 501) {
+      // Backend doesn't support it yet — show clear message
+      const info = document.getElementById('ppInfo');
+      info.style.display = 'block';
+      info.className = 'result-box error';
+      info.innerHTML = '⚠️ PDF password encryption needs the <strong>qpdf</strong> package installed on your server. Run: <code>apt-get install qpdf</code> on your backend server, then restart.';
+      btn.textContent = '🔒 Protect PDF & Download'; btn.disabled = false;
+      return;
+    }
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error||'Server error'); }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href=url; a.download='protected.pdf'; a.click();
+    btn.textContent = '✅ Protected! Download again?'; btn.disabled = false;
+  } catch(e) {
+    alert('❌ Error: ' + e.message);
+    btn.textContent = '🔒 Protect PDF & Download'; btn.disabled = false;
+  }
 }
 
 // ========= COLOR PICKER =========
