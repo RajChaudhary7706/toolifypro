@@ -19,3 +19,4 @@ build/
 
 # Optional: VS Code settings
 .vscode/
+.env
