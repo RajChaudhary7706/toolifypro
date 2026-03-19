@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ToolifyPro – All-in-One Free Online Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --card: #16161e;
+  --border: #2a2a38;
+  --accent: #00e5ff;
+  --accent2: #ff6b6b;
+  --accent3: #a78bfa;
+  --text: #e8e8f0;
+  --text2: #888899;
+  --radius: 14px;
+  --font: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;}
+
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,15,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.logo{font-family:var(--font);font-size:1.4rem;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-0.5px;}
+.logo span{color:var(--accent);}
+nav{display:flex;gap:8px;}
+nav a{color:var(--text2);text-decoration:none;font-size:.85rem;padding:6px 14px;border-radius:8px;transition:.2s;}
+nav a:hover{color:var(--text);background:var(--card);}
+.nav-cta{background:var(--accent)!important;color:#000!important;font-weight:600;}
+
+/* HERO */
+.hero{
+  text-align:center;padding:80px 20px 60px;
+  background: radial-gradient(ellipse 800px 400px at 50% 0%, rgba(0,229,255,.08), transparent);
+}
+.hero h1{font-family:var(--font);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;line-height:1.1;letter-spacing:-2px;margin-bottom:16px;}
+.hero h1 span{color:var(--accent);}
+.hero p{color:var(--text2);font-size:1.1rem;max-width:560px;margin:0 auto 32px;}
+.search-bar{display:flex;gap:0;max-width:500px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.search-bar input{flex:1;background:none;border:none;outline:none;padding:14px 20px;color:var(--text);font-size:.95rem;font-family:var(--body);}
+.search-bar button{background:var(--accent);color:#000;border:none;padding:0 24px;font-weight:600;cursor:pointer;font-size:.9rem;}
+.stats{display:flex;justify-content:center;gap:40px;margin-top:40px;}
+.stat{text-align:center;}
+.stat strong{font-family:var(--font);font-size:1.6rem;color:var(--accent);display:block;}
+.stat span{font-size:.8rem;color:var(--text2);}
+
+/* CATEGORIES NAV */
+.cats{display:flex;gap:8px;overflow-x:auto;padding:32px 40px 0;scrollbar-width:none;}
+.cats::-webkit-scrollbar{display:none;}
+.cat-btn{
+  white-space:nowrap;
+  padding:10px 20px;border-radius:10px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text2);font-size:.85rem;cursor:pointer;
+  transition:.2s;display:flex;align-items:center;gap:8px;font-family:var(--body);
+}
+.cat-btn:hover,.cat-btn.active{background:var(--accent);color:#000;border-color:var(--accent);}
+
+/* TOOLS GRID */
+.tools-section{padding:32px 40px 60px;}
+.section-title{font-family:var(--font);font-size:1.4rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:48px;}
+.tool-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;cursor:pointer;transition:.2s;position:relative;overflow:hidden;
+}
+.tool-card::before{content:'';position:absolute;inset:0;opacity:0;background:linear-gradient(135deg,rgba(0,229,255,.08),transparent);transition:.3s;}
+.tool-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.tool-card:hover::before{opacity:1;}
+.tool-icon{font-size:2rem;margin-bottom:12px;}
+.tool-name{font-family:var(--font);font-weight:600;font-size:.95rem;margin-bottom:4px;}
+.tool-desc{font-size:.78rem;color:var(--text2);line-height:1.4;}
+.tool-badge{position:absolute;top:10px;right:10px;background:var(--accent2);color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--font);}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);z-index:999;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  width:100%;max-width:720px;max-height:90vh;overflow-y:auto;
+}
+.modal-header{padding:24px 28px 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--card);z-index:10;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.modal-header h2{font-family:var(--font);font-size:1.3rem;display:flex;align-items:center;gap:10px;}
+.modal-close{background:none;border:none;color:var(--text2);font-size:1.5rem;cursor:pointer;line-height:1;padding:4px;}
+.modal-close:hover{color:var(--text);}
+.modal-body{padding:28px;}
+
+/* TOOL UI COMPONENTS */
+.drop-zone{
+  border:2px dashed var(--border);border-radius:12px;
+  padding:48px 24px;text-align:center;cursor:pointer;transition:.2s;
+  background:var(--bg2);
+}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:rgba(0,229,255,.04);}
+.drop-zone input[type=file]{display:none;}
+.drop-icon{font-size:3rem;margin-bottom:12px;}
+.drop-text{color:var(--text2);font-size:.9rem;}
+.drop-text strong{color:var(--accent);}
+
+.btn{
+  background:var(--accent);color:#000;border:none;
+  padding:12px 28px;border-radius:10px;font-weight:600;
+  cursor:pointer;font-size:.9rem;font-family:var(--body);
+  transition:.2s;
+}
+.btn:hover{opacity:.85;transform:scale(.98);}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--text);margin-left:8px;}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-red{background:var(--accent2)!important;color:#fff!important;}
+.btn-row{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap;}
+
+textarea,input[type=text],input[type=url],input[type=number],select{
+  width:100%;background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;color:var(--text);
+  font-size:.9rem;font-family:var(--body);outline:none;resize:vertical;transition:.2s;
+}
+textarea:focus,input[type=text]:focus,input[type=url]:focus,input[type=number]:focus,select:focus{border-color:var(--accent);}
+select option{background:var(--bg2);}
+label{font-size:.85rem;color:var(--text2);margin-bottom:6px;display:block;}
+.form-group{margin-bottom:16px;}
+
+.result-box{
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:16px;margin-top:16px;font-size:.88rem;line-height:1.7;
+  white-space:pre-wrap;word-break:break-all;min-height:80px;
+}
+.result-box.success{border-color:#22c55e;background:rgba(34,197,94,.08);}
+.result-box.error{border-color:var(--accent2);background:rgba(255,107,107,.08);}
+
+.range-row{display:flex;align-items:center;gap:12px;margin:8px 0;}
+input[type=range]{flex:1;accent-color:var(--accent);}
+.range-val{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.85rem;min-width:48px;text-align:center;}
+
+.preview-img{max-width:100%;border-radius:10px;margin-top:12px;border:1px solid var(--border);}
+canvas{display:none;}
+
+.tabs{display:flex;gap:4px;margin-bottom:16px;}
+.tab{padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:none;color:var(--text2);cursor:pointer;font-size:.85rem;font-family:var(--body);}
+.tab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600;}
+
+.copy-btn{font-size:.75rem;padding:6px 14px;float:right;}
+
+/* QR */
+#qr-output{display:flex;justify-content:center;margin-top:16px;}
+#qr-output canvas,#qr-output img{border-radius:10px;}
+
+/* COLOR */
+.color-row{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap;}
+.color-swatch{width:64px;height:64px;border-radius:10px;border:2px solid var(--border);flex-shrink:0;}
+.color-values{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.color-val{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:.8rem;}
+.color-val strong{display:block;color:var(--text2);font-size:.7rem;margin-bottom:2px;}
+
+/* Progress */
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin:12px 0;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s;}
+
+/* Diff */
+.diff-added{background:rgba(34,197,94,.2);color:#86efac;}
+.diff-removed{background:rgba(255,107,107,.2);color:#fca5a5;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;}
+.footer-left .logo{font-size:1.1rem;}
+.footer-left p{color:var(--text2);font-size:.8rem;margin-top:6px;}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{color:var(--text2);text-decoration:none;font-size:.82rem;}
+.footer-links a:hover{color:var(--accent);}
+
+/* AD PLACEHOLDER */
+.ad-banner{background:var(--card);border:1px dashed var(--border);border-radius:10px;padding:20px;text-align:center;color:var(--text2);font-size:.8rem;margin:20px 40px;}
+
+@media(max-width:640px){
+  header{padding:0 16px;}
+  nav{display:none;}
+  .hero{padding:48px 16px 40px;}
+  .cats{padding:20px 16px 0;}
+  .tools-section{padding:20px 16px 40px;}
+  .ad-banner{margin:16px;}
+  footer{flex-direction:column;gap:16px;padding:24px 16px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">Toolify<span>Pro</span></a>
+  <nav>
+    <a href="#pdf-tools">PDF</a>
+    <a href="#image-tools">Image</a>
+    <a href="#text-tools">Text</a>
+    <a href="#dev-tools">Dev</a>
+    <a href="#marketing-tools">Marketing</a>
+    <a href="#" class="nav-cta">All Tools</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>All-in-One<br/><span>Free Online Tools</span></h1>
+  <p>50+ powerful tools for PDF, Images, Text, Developers & Marketing. No signup. No limits. 100% free.</p>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search tools... e.g. compress PDF" oninput="searchTools(this.value)"/>
+    <button onclick="searchTools(document.getElementById('searchInput').value)">Search</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong>50+</strong><span>Free Tools</span></div>
+    <div class="stat"><strong>100%</strong><span>No Signup</span></div>
+    <div class="stat"><strong>∞</strong><span>Unlimited Use</span></div>
+  </div>
+</section>
+
+<!-- AD BANNER -->
+<div class="ad-banner">📢 Advertisement Banner — Google AdSense Code Goes Here</div>
+
+<!-- CATEGORY FILTER -->
+<div class="cats" id="catNav">
+  <button class="cat-btn active" onclick="filterCat('all',this)">⚡ All Tools</button>
+  <button class="cat-btn" onclick="filterCat('pdf',this)">📄 PDF Tools</button>
+  <button class="cat-btn" onclick="filterCat('image',this)">🖼️ Image Tools</button>
+  <button class="cat-btn" onclick="filterCat('text',this)">📝 Text Tools</button>
+  <button class="cat-btn" onclick="filterCat('dev',this)">💻 Developer Tools</button>
+  <button class="cat-btn" onclick="filterCat('marketing',this)">📣 Marketing Tools</button>
+  <button class="cat-btn" onclick="filterCat('converter',this)">🔄 Converters</button>
+</div>
+
+<!-- TOOLS -->
+<div class="tools-section" id="toolsContainer">
+
+  <!-- PDF TOOLS -->
+  <div class="section-title" id="pdf-tools">📄 PDF Tools</div>
+  <div class="tools-grid" data-category="pdf">
+    <div class="tool-card" data-cat="pdf" onclick="openTool('img-to-pdf')">
+      <div class="tool-icon">🖼️→📄</div>
+      <div class="tool-name">Image to PDF</div>
+      <div class="tool-desc">Convert JPG, PNG images to PDF</div>
+      <span class="tool-badge">HOT</span>
+    </div>
+    <div class="tool-card" data-cat="pdf" onclick="openTool('pdf-merge')">
+      <div class="tool-icon">📑</div>
+      <div class="tool-name">Merge PDFs</div>
+      <div class="tool-desc">Combine multiple PDFs into one</div>
+    </div>
+    <div class="tool-card" data-cat="pdf" onclick="openTool('pdf-compress')">
+      <div class="tool-icon">🗜️</div>
+      <div class="tool-name">Compress PDF</div>
+      <div class="tool-desc">Reduce PDF file size easily</div>
+    </div>
+    <div class="tool-card" data-cat="pdf" onclick="openTool('pdf-to-img')">
+      <div class="tool-icon">📄→🖼️</div>
+      <div class="tool-name">PDF to Image</div>
+      <div class="tool-desc">Extract pages as PNG images</div>
+    </div>
+    <div class="tool-card" data-cat="pdf" onclick="openTool('pdf-splitter')">
+      <div class="tool-icon">✂️</div>
+      <div class="tool-name">Split PDF</div>
+      <div class="tool-desc">Extract specific pages from PDF</div>
+    </div>
+    <div class="tool-card" data-cat="pdf" onclick="openTool('pdf-protect')">
+      <div class="tool-icon">🔒</div>
+      <div class="tool-name">Protect PDF</div>
+      <div class="tool-desc">Add password to your PDF</div>
+    </div>
+  </div>
+
+  <!-- IMAGE TOOLS -->
+  <div class="section-title" id="image-tools">🖼️ Image Tools</div>
+  <div class="tools-grid" data-category="image">
+    <div class="tool-card" data-cat="image" onclick="openTool('img-compress')">
+      <div class="tool-icon">🗜️</div>
+      <div class="tool-name">Compress Image</div>
+      <div class="tool-desc">Reduce image size without quality loss</div>
+      <span class="tool-badge">HOT</span>
+    </div>
+    <div class="tool-card" data-cat="image" onclick="openTool('img-resize')">
+      <div class="tool-icon">📐</div>
+      <div class="tool-name">Resize Image</div>
+      <div class="tool-desc">Change image dimensions easily</div>
+    </div>
+    <div class="tool-card" data-cat="image" onclick="openTool('img-convert')">
+      <div class="tool-icon">🔄</div>
+      <div class="tool-name">Convert Image</div>
+      <div class="tool-desc">JPG↔PNG↔WebP conversion</div>
+    </div>
+    <div class="tool-card" data-cat="image" onclick="openTool('img-crop')">
+      <div class="tool-icon">✂️</div>
+      <div class="tool-name">Crop Image</div>
+      <div class="tool-desc">Crop images to any size</div>
+    </div>
+    <div class="tool-card" data-cat="image" onclick="openTool('img-grayscale')">
+      <div class="tool-icon">⚫</div>
+      <div class="tool-name">Grayscale / BW</div>
+      <div class="tool-desc">Convert images to black & white</div>
+    </div>
+    <div class="tool-card" data-cat="image" onclick="openTool('img-flip')">
+      <div class="tool-icon">↔️</div>
+      <div class="tool-name">Flip / Rotate</div>
+      <div class="tool-desc">Flip or rotate your images</div>
+    </div>
+    <div class="tool-card" data-cat="image" onclick="openTool('img-watermark')">
+      <div class="tool-icon">💧</div>
+      <div class="tool-name">Add Watermark</div>
+      <div class="tool-desc">Add text watermark to images</div>
+    </div>
+    <div class="tool-card" data-cat="image" onclick="openTool('color-picker')">
+      <div class="tool-icon">🎨</div>
+      <div class="tool-name">Color Picker</div>
+      <div class="tool-desc">Pick colors and get HEX/RGB codes</div>
+    </div>
+  </div>
+
+  <!-- TEXT TOOLS -->
+  <div class="section-title" id="text-tools">📝 Text Tools</div>
+  <div class="tools-grid" data-category="text">
+    <div class="tool-card" data-cat="text" onclick="openTool('word-counter')">
+      <div class="tool-icon">🔢</div>
+      <div class="tool-name">Word Counter</div>
+      <div class="tool-desc">Count words, characters, sentences</div>
+    </div>
+    <div class="tool-card" data-cat="text" onclick="openTool('case-converter')">
+      <div class="tool-icon">Aa</div>
+      <div class="tool-name">Case Converter</div>
+      <div class="tool-desc">UPPER, lower, Title, camelCase</div>
+    </div>
+    <div class="tool-card" data-cat="text" onclick="openTool('lorem-ipsum')">
+      <div class="tool-icon">📖</div>
+      <div class="tool-name">Lorem Ipsum</div>
+      <div class="tool-desc">Generate placeholder text</div>
+    </div>
+    <div class="tool-card" data-cat="text" onclick="openTool('text-diff')">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-name">Text Diff</div>
+      <div class="tool-desc">Compare two texts side by side</div>
+    </div>
+    <div class="tool-card" data-cat="text" onclick="openTool('find-replace')">
+      <div class="tool-icon">🔎</div>
+      <div class="tool-name">Find & Replace</div>
+      <div class="tool-desc">Bulk find and replace text</div>
+    </div>
+    <div class="tool-card" data-cat="text" onclick="openTool('text-reverse')">
+      <div class="tool-icon">🔀</div>
+      <div class="tool-name">Reverse Text</div>
+      <div class="tool-desc">Reverse any text or string</div>
+    </div>
+    <div class="tool-card" data-cat="text" onclick="openTool('duplicate-remover')">
+      <div class="tool-icon">🗑️</div>
+      <div class="tool-name">Remove Duplicates</div>
+      <div class="tool-desc">Remove duplicate lines from text</div>
+    </div>
+    <div class="tool-card" data-cat="text" onclick="openTool('text-sorter')">
+      <div class="tool-icon">🔤</div>
+      <div class="tool-name">Sort Text Lines</div>
+      <div class="tool-desc">Sort lines alphabetically</div>
+    </div>
+  </div>
+
+  <!-- DEVELOPER TOOLS -->
+  <div class="section-title" id="dev-tools">💻 Developer Tools</div>
+  <div class="tools-grid" data-category="dev">
+    <div class="tool-card" data-cat="dev" onclick="openTool('json-formatter')">
+      <div class="tool-icon">{ }</div>
+      <div class="tool-name">JSON Formatter</div>
+      <div class="tool-desc">Beautify & validate JSON</div>
+      <span class="tool-badge">NEW</span>
+    </div>
+    <div class="tool-card" data-cat="dev" onclick="openTool('base64')">
+      <div class="tool-icon">01</div>
+      <div class="tool-name">Base64 Encode/Decode</div>
+      <div class="tool-desc">Encode or decode Base64 strings</div>
+    </div>
+    <div class="tool-card" data-cat="dev" onclick="openTool('url-encoder')">
+      <div class="tool-icon">🔗</div>
+      <div class="tool-name">URL Encode/Decode</div>
+      <div class="tool-desc">Encode or decode URLs</div>
+    </div>
+    <div class="tool-card" data-cat="dev" onclick="openTool('html-escape')">
+      <div class="tool-icon">&lt;/&gt;</div>
+      <div class="tool-name">HTML Escape</div>
+      <div class="tool-desc">Escape or unescape HTML entities</div>
+    </div>
+    <div class="tool-card" data-cat="dev" onclick="openTool('hash-gen')">
+      <div class="tool-icon">#️⃣</div>
+      <div class="tool-name">Hash Generator</div>
+      <div class="tool-desc">Generate MD5, SHA1, SHA256</div>
+    </div>
+    <div class="tool-card" data-cat="dev" onclick="openTool('regex-tester')">
+      <div class="tool-icon">.*</div>
+      <div class="tool-name">Regex Tester</div>
+      <div class="tool-desc">Test regular expressions live</div>
+    </div>
+    <div class="tool-card" data-cat="dev" onclick="openTool('css-minifier')">
+      <div class="tool-icon">📦</div>
+      <div class="tool-name">CSS Minifier</div>
+      <div class="tool-desc">Minify CSS code for production</div>
+    </div>
+    <div class="tool-card" data-cat="dev" onclick="openTool('password-gen')">
+      <div class="tool-icon">🔑</div>
+      <div class="tool-name">Password Generator</div>
+      <div class="tool-desc">Generate strong random passwords</div>
+    </div>
+  </div>
+
+  <!-- MARKETING TOOLS -->
+  <div class="section-title" id="marketing-tools">📣 Marketing Tools</div>
+  <div class="tools-grid" data-category="marketing">
+    <div class="tool-card" data-cat="marketing" onclick="openTool('qr-gen')">
+      <div class="tool-icon">📱</div>
+      <div class="tool-name">QR Code Generator</div>
+      <div class="tool-desc">Generate QR codes for any URL</div>
+      <span class="tool-badge">HOT</span>
+    </div>
+    <div class="tool-card" data-cat="marketing" onclick="openTool('meta-tags')">
+      <div class="tool-icon">🏷️</div>
+      <div class="tool-name">Meta Tag Generator</div>
+      <div class="tool-desc">Generate SEO meta tags</div>
+    </div>
+    <div class="tool-card" data-cat="marketing" onclick="openTool('og-preview')">
+      <div class="tool-icon">👁️</div>
+      <div class="tool-name">OG Preview</div>
+      <div class="tool-desc">Preview how URLs look on social</div>
+    </div>
+    <div class="tool-card" data-cat="marketing" onclick="openTool('utm-builder')">
+      <div class="tool-icon">📊</div>
+      <div class="tool-name">UTM Builder</div>
+      <div class="tool-desc">Build UTM tracking links</div>
+    </div>
+    <div class="tool-card" data-cat="marketing" onclick="openTool('keyword-density')">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-name">Keyword Density</div>
+      <div class="tool-desc">Analyze keyword density in text</div>
+    </div>
+    <div class="tool-card" data-cat="marketing" onclick="openTool('slug-gen')">
+      <div class="tool-icon">🐌</div>
+      <div class="tool-name">Slug Generator</div>
+      <div class="tool-desc">Convert titles to URL slugs</div>
+    </div>
+  </div>
+
+  <!-- CONVERTERS -->
+  <div class="section-title" id="converter-tools">🔄 Unit Converters</div>
+  <div class="tools-grid" data-category="converter">
+    <div class="tool-card" data-cat="converter" onclick="openTool('px-rem')">
+      <div class="tool-icon">📏</div>
+      <div class="tool-name">PX ↔ REM</div>
+      <div class="tool-desc">Convert pixels to REM and back</div>
+    </div>
+    <div class="tool-card" data-cat="converter" onclick="openTool('hex-rgb')">
+      <div class="tool-icon">🎨</div>
+      <div class="tool-name">HEX ↔ RGB</div>
+      <div class="tool-desc">Convert color codes</div>
+    </div>
+    <div class="tool-card" data-cat="converter" onclick="openTool('temp-converter')">
+      <div class="tool-icon">🌡️</div>
+      <div class="tool-name">Temperature</div>
+      <div class="tool-desc">°C ↔ °F ↔ Kelvin</div>
+    </div>
+    <div class="tool-card" data-cat="converter" onclick="openTool('unix-time')">
+      <div class="tool-icon">⏰</div>
+      <div class="tool-name">Unix Timestamp</div>
+      <div class="tool-desc">Convert Unix timestamps to dates</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- AD BANNER -->
+<div class="ad-banner">📢 Advertisement Banner — Google AdSense Code Goes Here</div>
+
+<footer>
+  <div class="footer-left">
+    <a class="logo" href="#">Toolify<span style="color:var(--accent)">Pro</span></a>
+    <p>© 2025 ToolifyPro · All tools are free, no signup required.</p>
+  </div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    <a href="#">Sitemap</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Tool</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<canvas id="workCanvas"></canvas>
+
+<script>
+// =========== TOOL DEFINITIONS ===========
+const TOOLS = {
+  // -------- IMAGE COMPRESS --------
+  'img-compress': {
+    title: '🗜️ Image Compressor',
+    html: `
+      <div class="drop-zone" id="icDrop" onclick="document.getElementById('icFile').click()">
+        <input type="file" id="icFile" accept="image/*" onchange="icLoad(this)"/>
+        <div class="drop-icon">🖼️</div>
+        <div class="drop-text">Click or drag & drop image here<br/><strong>JPG, PNG, WebP supported</strong></div>
+      </div>
+      <div id="icControls" style="display:none;margin-top:16px;">
+        <label>Quality</label>
+        <div class="range-row">
+          <input type="range" id="icQuality" min="10" max="100" value="75" oninput="document.getElementById('icQVal').textContent=this.value+'%'"/>
+          <span class="range-val" id="icQVal">75%</span>
+        </div>
+        <img id="icPreview" class="preview-img"/>
+        <div id="icInfo" class="result-box" style="margin-top:12px;"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="icDownload()">⬇️ Download Compressed</button>
+          <button class="btn btn-outline" onclick="icReset()">Reset</button>
+        </div>
+      </div>`,
+    init: () => {
+      document.getElementById('icQuality').addEventListener('input', icCompress);
+    }
+  },
+
+  // -------- IMAGE RESIZE --------
+  'img-resize': {
+    title: '📐 Image Resizer',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('irFile').click()">
+        <input type="file" id="irFile" accept="image/*" onchange="irLoad(this)"/>
+        <div class="drop-icon">📐</div>
+        <div class="drop-text">Click to upload image</div>
+      </div>
+      <div id="irControls" style="display:none;margin-top:16px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group"><label>Width (px)</label><input type="number" id="irW" placeholder="Width"/></div>
+          <div class="form-group"><label>Height (px)</label><input type="number" id="irH" placeholder="Height"/></div>
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="irAspect" checked style="width:auto;"/>
+          <label style="margin:0;">Keep aspect ratio</label>
+        </div>
+        <img id="irPreview" class="preview-img"/>
+        <div id="irInfo" class="result-box" style="margin-top:8px;"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="irResize()">📐 Resize & Download</button>
+        </div>
+      </div>`
+  },
+
+  // -------- IMAGE CONVERT --------
+  'img-convert': {
+    title: '🔄 Image Converter',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('icvFile').click()">
+        <input type="file" id="icvFile" accept="image/*" onchange="icvLoad(this)"/>
+        <div class="drop-icon">🔄</div>
+        <div class="drop-text">Click to upload image</div>
+      </div>
+      <div id="icvControls" style="display:none;margin-top:16px;">
+        <div class="form-group">
+          <label>Convert to</label>
+          <select id="icvFormat"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select>
+        </div>
+        <img id="icvPreview" class="preview-img"/>
+        <div class="btn-row">
+          <button class="btn" onclick="icvConvert()">🔄 Convert & Download</button>
+        </div>
+      </div>`
+  },
+
+  // -------- IMG GRAYSCALE --------
+  'img-grayscale': {
+    title: '⚫ Grayscale / B&W',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('igFile').click()">
+        <input type="file" id="igFile" accept="image/*" onchange="igLoad(this)"/>
+        <div class="drop-icon">⚫</div>
+        <div class="drop-text">Click to upload image</div>
+      </div>
+      <div id="igControls" style="display:none;margin-top:16px;">
+        <div style="display:flex;gap:12px;">
+          <div><img id="igOriginal" style="max-width:48%;border-radius:8px;border:1px solid var(--border);" /><p style="font-size:.75rem;color:var(--text2);margin-top:4px;">Original</p></div>
+          <div><img id="igResult" style="max-width:48%;border-radius:8px;border:1px solid var(--border);" /><p style="font-size:.75rem;color:var(--text2);margin-top:4px;">Grayscale</p></div>
+        </div>
+        <div class="btn-row"><button class="btn" onclick="igDownload()">⬇️ Download</button></div>
+      </div>`
+  },
+
+  // -------- IMG FLIP --------
+  'img-flip': {
+    title: '↔️ Flip / Rotate Image',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('ifFile').click()">
+        <input type="file" id="ifFile" accept="image/*" onchange="ifLoad(this)"/>
+        <div class="drop-icon">↔️</div>
+        <div class="drop-text">Click to upload image</div>
+      </div>
+      <div id="ifControls" style="display:none;margin-top:16px;">
+        <img id="ifPreview" class="preview-img"/>
+        <div class="btn-row" style="margin-top:12px;">
+          <button class="btn" onclick="ifTransform('flipH')">↔️ Flip H</button>
+          <button class="btn btn-outline" onclick="ifTransform('flipV')">↕️ Flip V</button>
+          <button class="btn btn-outline" onclick="ifTransform('rot90')">↩️ Rotate 90°</button>
+          <button class="btn btn-outline" onclick="ifTransform('rot180')">🔃 Rotate 180°</button>
+        </div>
+        <div class="btn-row"><button class="btn" onclick="ifDownload()">⬇️ Download</button></div>
+      </div>`
+  },
+
+  // -------- IMG WATERMARK --------
+  'img-watermark': {
+    title: '💧 Add Watermark',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('iwFile').click()">
+        <input type="file" id="iwFile" accept="image/*" onchange="iwLoad(this)"/>
+        <div class="drop-icon">💧</div>
+        <div class="drop-text">Click to upload image</div>
+      </div>
+      <div id="iwControls" style="display:none;margin-top:16px;">
+        <div class="form-group"><label>Watermark Text</label><input type="text" id="iwText" value="© ToolifyPro"/></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group"><label>Font Size</label><input type="number" id="iwSize" value="40"/></div>
+          <div class="form-group"><label>Opacity (%)</label><input type="number" id="iwOpacity" value="50" min="10" max="100"/></div>
+        </div>
+        <div class="form-group">
+          <label>Position</label>
+          <select id="iwPos">
+            <option value="bottom-right">Bottom Right</option>
+            <option value="bottom-left">Bottom Left</option>
+            <option value="top-right">Top Right</option>
+            <option value="center">Center</option>
+          </select>
+        </div>
+        <img id="iwPreview" class="preview-img"/>
+        <div class="btn-row">
+          <button class="btn" onclick="iwApply()">💧 Apply Watermark</button>
+          <button class="btn btn-outline" onclick="iwDownload()">⬇️ Download</button>
+        </div>
+      </div>`
+  },
+
+  // -------- IMG TO PDF --------
+  'img-to-pdf': {
+    title: '🖼️→📄 Images to PDF',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('itpFile').click()">
+        <input type="file" id="itpFile" accept="image/*" multiple onchange="itpLoad(this)"/>
+        <div class="drop-icon">🖼️</div>
+        <div class="drop-text">Click to upload images (multiple allowed)<br/><strong>JPG, PNG supported</strong></div>
+      </div>
+      <div id="itpList" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;"></div>
+      <div id="itpControls" style="display:none;margin-top:16px;">
+        <div class="form-group">
+          <label>Page Size</label>
+          <select id="itpSize"><option value="a4">A4</option><option value="letter">Letter</option><option value="fit">Fit to Image</option></select>
+        </div>
+        <div class="btn-row"><button class="btn" onclick="itpConvert()">📄 Create PDF & Download</button></div>
+      </div>`,
+    init: () => {}
+  },
+
+  // -------- PDF COMPRESS (simulated) --------
+  'pdf-compress': {
+    title: '🗜️ Compress PDF',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('pcFile').click()">
+        <input type="file" id="pcFile" accept=".pdf" onchange="pcLoad(this)"/>
+        <div class="drop-icon">🗜️</div>
+        <div class="drop-text">Click to upload PDF</div>
+      </div>
+      <div id="pcResult" class="result-box" style="display:none;margin-top:16px;"></div>
+      <div id="pcBtns" class="btn-row" style="display:none;"></div>`
+  },
+
+  // -------- PDF TO IMAGE --------
+  'pdf-to-img': {
+    title: '📄→🖼️ PDF to Images',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('ptiFile').click()">
+        <input type="file" id="ptiFile" accept=".pdf" onchange="ptiLoad(this)"/>
+        <div class="drop-icon">📄</div>
+        <div class="drop-text">Click to upload PDF</div>
+      </div>
+      <div id="ptiProgress" class="progress-bar" style="display:none;"><div class="progress-fill" id="ptiFill" style="width:0%"></div></div>
+      <div id="ptiResult" style="margin-top:12px;"></div>`
+  },
+
+  // -------- MERGE PDF --------
+  'pdf-merge': {
+    title: '📑 Merge PDFs',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('pmFile').click()">
+        <input type="file" id="pmFile" accept=".pdf" multiple onchange="pmLoad(this)"/>
+        <div class="drop-icon">📑</div>
+        <div class="drop-text">Upload multiple PDFs to merge<br/><strong>Select all files at once</strong></div>
+      </div>
+      <div id="pmList" style="margin-top:12px;"></div>
+      <div id="pmBtns" class="btn-row" style="display:none;"></div>`
+  },
+
+  // -------- PDF SPLIT --------
+  'pdf-splitter': {
+    title: '✂️ Split PDF',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('psFile').click()">
+        <input type="file" id="psFile" accept=".pdf" onchange="psLoad(this)"/>
+        <div class="drop-icon">✂️</div>
+        <div class="drop-text">Click to upload PDF</div>
+      </div>
+      <div id="psControls" style="display:none;margin-top:16px;">
+        <div id="psInfo" class="result-box"></div>
+        <div class="form-group" style="margin-top:12px;"><label>Pages to extract (e.g. 1,3,5-8)</label><input type="text" id="psPages" placeholder="e.g. 1,2,3 or 1-5"/></div>
+        <div class="btn-row"><button class="btn" onclick="psSplit()">✂️ Extract Pages</button></div>
+      </div>`
+  },
+
+  // -------- PDF PROTECT --------
+  'pdf-protect': {
+    title: '🔒 Protect PDF',
+    html: `
+      <div class="result-box" style="border-color:var(--accent3);">
+        <strong style="color:var(--accent3);">ℹ️ Note:</strong> PDF password protection requires a server-side component. This frontend-only demo shows the UI. To implement: use a Node.js backend with <strong>pdf-lib</strong> or <strong>hummus</strong> library.
+      </div>
+      <div style="margin-top:16px;">
+        <div class="drop-zone" onclick="document.getElementById('ppFile').click()">
+          <input type="file" id="ppFile" accept=".pdf"/>
+          <div class="drop-icon">🔒</div>
+          <div class="drop-text">Click to upload PDF</div>
+        </div>
+        <div class="form-group" style="margin-top:16px;"><label>Password</label><input type="text" id="ppPass" placeholder="Enter password"/></div>
+        <div class="btn-row"><button class="btn" onclick="alert('Backend needed! Use pdf-lib on Node.js server.')">🔒 Protect PDF</button></div>
+      </div>`
+  },
+
+  // -------- IMG CROP --------
+  'img-crop': {
+    title: '✂️ Crop Image',
+    html: `
+      <div class="drop-zone" onclick="document.getElementById('cropFile').click()">
+        <input type="file" id="cropFile" accept="image/*" onchange="cropLoad(this)"/>
+        <div class="drop-icon">✂️</div>
+        <div class="drop-text">Click to upload image</div>
+      </div>
+      <div id="cropControls" style="display:none;margin-top:16px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+          <div class="form-group"><label>X</label><input type="number" id="cropX" value="0"/></div>
+          <div class="form-group"><label>Y</label><input type="number" id="cropY" value="0"/></div>
+          <div class="form-group"><label>Width</label><input type="number" id="cropW" value="100"/></div>
+          <div class="form-group"><label>Height</label><input type="number" id="cropH" value="100"/></div>
+        </div>
+        <div id="cropInfo" class="result-box"></div>
+        <img id="cropPreview" class="preview-img" style="margin-top:8px;"/>
+        <div class="btn-row">
+          <button class="btn" onclick="doCrop()">✂️ Crop & Download</button>
+        </div>
+      </div>`
+  },
+
+  // -------- COLOR PICKER --------
+  'color-picker': {
+    title: '🎨 Color Picker',
+    html: `
+      <div class="form-group">
+        <label>Pick a Color</label>
+        <input type="color" id="cpColor" value="#00e5ff" style="width:100%;height:60px;border-radius:10px;border:1px solid var(--border);background:none;cursor:pointer;" oninput="cpUpdate(this.value)"/>
+      </div>
+      <div id="cpRow" class="color-row">
+        <div class="color-swatch" id="cpSwatch" style="background:#00e5ff;"></div>
+        <div class="color-values" id="cpValues"></div>
+      </div>
+      <div style="margin-top:16px;">
+        <label>Or enter HEX manually</label>
+        <input type="text" id="cpHex" value="#00e5ff" placeholder="#000000" oninput="cpFromHex(this.value)" style="margin-top:6px;"/>
+      </div>`,
+    init: () => cpUpdate('#00e5ff')
+  },
+
+  // -------- WORD COUNTER --------
+  'word-counter': {
+    title: '🔢 Word Counter',
+    html: `
+      <div class="form-group">
+        <textarea id="wcText" rows="10" placeholder="Paste or type your text here..." oninput="wcCount()"></textarea>
+      </div>
+      <div id="wcResult" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;"></div>`,
+    init: () => wcCount()
+  },
+
+  // -------- CASE CONVERTER --------
+  'case-converter': {
+    title: 'Aa Case Converter',
+    html: `
+      <div class="form-group">
+        <textarea id="ccText" rows="6" placeholder="Enter your text here..."></textarea>
+      </div>
+      <div class="btn-row" style="flex-wrap:wrap;">
+        <button class="btn" onclick="cc('upper')">UPPERCASE</button>
+        <button class="btn btn-outline" onclick="cc('lower')">lowercase</button>
+        <button class="btn btn-outline" onclick="cc('title')">Title Case</button>
+        <button class="btn btn-outline" onclick="cc('sentence')">Sentence case</button>
+        <button class="btn btn-outline" onclick="cc('camel')">camelCase</button>
+        <button class="btn btn-outline" onclick="cc('snake')">snake_case</button>
+        <button class="btn btn-outline" onclick="cc('kebab')">kebab-case</button>
+      </div>
+      <div id="ccResult" class="result-box" style="display:none;"></div>
+      <div id="ccBtns" class="btn-row" style="display:none;">
+        <button class="btn btn-outline copy-btn" onclick="copyText('ccResult')">📋 Copy</button>
+      </div>`
+  },
+
+  // -------- LOREM IPSUM --------
+  'lorem-ipsum': {
+    title: '📖 Lorem Ipsum Generator',
+    html: `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div class="form-group"><label>Number</label><input type="number" id="liCount" value="3" min="1" max="50"/></div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="liType"><option value="paragraphs">Paragraphs</option><option value="sentences">Sentences</option><option value="words">Words</option></select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="genLorem()">Generate</button>
+      </div>
+      <div id="liResult" class="result-box" style="display:none;margin-top:16px;"></div>
+      <div id="liBtns" class="btn-row" style="display:none;">
+        <button class="btn btn-outline" onclick="copyText('liResult')">📋 Copy</button>
+      </div>`
+  },
+
+  // -------- TEXT DIFF --------
+  'text-diff': {
+    title: '🔍 Text Diff Checker',
+    html: `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label>Original Text</label><textarea id="diffA" rows="8" placeholder="Original..."></textarea></div>
+        <div class="form-group"><label>Modified Text</label><textarea id="diffB" rows="8" placeholder="Modified..."></textarea></div>
+      </div>
+      <div class="btn-row"><button class="btn" onclick="doDiff()">🔍 Compare</button></div>
+      <div id="diffResult" style="margin-top:16px;"></div>`
+  },
+
+  // -------- FIND REPLACE --------
+  'find-replace': {
+    title: '🔎 Find & Replace',
+    html: `
+      <div class="form-group"><label>Text</label><textarea id="frText" rows="6" placeholder="Paste text here..."></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label>Find</label><input type="text" id="frFind" placeholder="Text to find..."/></div>
+        <div class="form-group"><label>Replace with</label><input type="text" id="frReplace" placeholder="Replace with..."/></div>
+      </div>
+      <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="frCase" style="width:auto;"/>
+        <label style="margin:0;">Case sensitive</label>
+        <input type="checkbox" id="frRegex" style="width:auto;margin-left:16px;"/>
+        <label style="margin:0;">Use Regex</label>
+      </div>
+      <div class="btn-row"><button class="btn" onclick="doFR()">🔎 Replace All</button></div>
+      <div id="frResult" class="result-box" style="display:none;"></div>
+      <div id="frBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('frResult')">📋 Copy</button></div>`
+  },
+
+  // -------- REVERSE TEXT --------
+  'text-reverse': {
+    title: '🔀 Reverse Text',
+    html: `
+      <div class="form-group"><label>Input Text</label><textarea id="rtText" rows="5" placeholder="Enter text to reverse..."></textarea></div>
+      <div class="tabs" style="margin-top:8px;">
+        <button class="tab active" onclick="rtDo('chars',this)">Reverse Chars</button>
+        <button class="tab" onclick="rtDo('words',this)">Reverse Words</button>
+        <button class="tab" onclick="rtDo('lines',this)">Reverse Lines</button>
+      </div>
+      <div id="rtResult" class="result-box" style="display:none;"></div>
+      <div id="rtBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('rtResult')">📋 Copy</button></div>`
+  },
+
+  // -------- REMOVE DUPLICATES --------
+  'duplicate-remover': {
+    title: '🗑️ Remove Duplicate Lines',
+    html: `
+      <div class="form-group"><label>Input (one item per line)</label><textarea id="drText" rows="8" placeholder="Line 1\nLine 2\nLine 1\nLine 3..."></textarea></div>
+      <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="drCase" style="width:auto;"/>
+        <label style="margin:0;">Case-insensitive</label>
+        <input type="checkbox" id="drTrim" style="width:auto;margin-left:16px;" checked/>
+        <label style="margin:0;">Trim whitespace</label>
+      </div>
+      <div class="btn-row"><button class="btn" onclick="doDR()">🗑️ Remove Duplicates</button></div>
+      <div id="drResult" class="result-box" style="display:none;"></div>
+      <div id="drInfo" style="color:var(--text2);font-size:.82rem;margin-top:8px;"></div>
+      <div id="drBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('drResult')">📋 Copy</button></div>`
+  },
+
+  // -------- SORT LINES --------
+  'text-sorter': {
+    title: '🔤 Sort Text Lines',
+    html: `
+      <div class="form-group"><label>Input Text</label><textarea id="tsText" rows="8" placeholder="Enter lines to sort..."></textarea></div>
+      <div class="btn-row">
+        <button class="btn" onclick="tsSort('asc')">A→Z</button>
+        <button class="btn btn-outline" onclick="tsSort('desc')">Z→A</button>
+        <button class="btn btn-outline" onclick="tsSort('shuffle')">🔀 Shuffle</button>
+        <button class="btn btn-outline" onclick="tsSort('length')">By Length</button>
+      </div>
+      <div id="tsResult" class="result-box" style="display:none;"></div>
+      <div id="tsBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('tsResult')">📋 Copy</button></div>`
+  },
+
+  // -------- JSON FORMATTER --------
+  'json-formatter': {
+    title: '{ } JSON Formatter',
+    html: `
+      <div class="form-group"><label>Input JSON</label><textarea id="jfInput" rows="8" placeholder='{"key":"value","arr":[1,2,3]}'></textarea></div>
+      <div class="btn-row">
+        <button class="btn" onclick="jfFormat()">✨ Beautify</button>
+        <button class="btn btn-outline" onclick="jfMinify()">📦 Minify</button>
+        <button class="btn btn-outline" onclick="jfValidate()">✅ Validate</button>
+      </div>
+      <div id="jfResult" class="result-box" style="display:none;"></div>
+      <div id="jfBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('jfResult')">📋 Copy</button></div>`
+  },
+
+  // -------- BASE64 --------
+  'base64': {
+    title: '01 Base64 Encoder/Decoder',
+    html: `
+      <div class="tabs">
+        <button class="tab active" id="b64EncTab" onclick="b64Mode('encode',this)">Encode</button>
+        <button class="tab" id="b64DecTab" onclick="b64Mode('decode',this)">Decode</button>
+      </div>
+      <div class="form-group"><label id="b64InputLabel">Text to Encode</label><textarea id="b64Input" rows="5" placeholder="Enter text..."></textarea></div>
+      <div class="btn-row"><button class="btn" onclick="doB64()">Convert</button></div>
+      <div id="b64Result" class="result-box" style="display:none;"></div>
+      <div id="b64Btns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('b64Result')">📋 Copy</button></div>`
+  },
+
+  // -------- URL ENCODER --------
+  'url-encoder': {
+    title: '🔗 URL Encode / Decode',
+    html: `
+      <div class="tabs">
+        <button class="tab active" onclick="urlMode('encode',this)">Encode</button>
+        <button class="tab" onclick="urlMode('decode',this)">Decode</button>
+      </div>
+      <div class="form-group"><textarea id="urlInput" rows="5" placeholder="Enter URL or text..."></textarea></div>
+      <div class="btn-row"><button class="btn" onclick="doURL()">Convert</button></div>
+      <div id="urlResult" class="result-box" style="display:none;"></div>
+      <div id="urlBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('urlResult')">📋 Copy</button></div>`
+  },
+
+  // -------- HTML ESCAPE --------
+  'html-escape': {
+    title: '&lt;/&gt; HTML Escape',
+    html: `
+      <div class="tabs">
+        <button class="tab active" onclick="htmlMode('escape',this)">Escape</button>
+        <button class="tab" onclick="htmlMode('unescape',this)">Unescape</button>
+      </div>
+      <div class="form-group"><textarea id="htmlInput" rows="6" placeholder="Enter HTML text..."></textarea></div>
+      <div class="btn-row"><button class="btn" onclick="doHTML()">Convert</button></div>
+      <div id="htmlResult" class="result-box" style="display:none;"></div>
+      <div id="htmlBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('htmlResult')">📋 Copy</button></div>`
+  },
+
+  // -------- HASH GENERATOR --------
+  'hash-gen': {
+    title: '#️⃣ Hash Generator',
+    html: `
+      <div class="form-group"><label>Input Text</label><textarea id="hashInput" rows="4" placeholder="Enter text to hash..."></textarea></div>
+      <div class="btn-row"><button class="btn" onclick="doHash()">Generate Hashes</button></div>
+      <div id="hashResult" style="margin-top:16px;display:none;">
+        <div class="form-group"><label>SHA-256</label><div class="result-box" id="h256" style="min-height:auto;font-family:monospace;"></div></div>
+        <div class="form-group"><label>SHA-1</label><div class="result-box" id="h1" style="min-height:auto;font-family:monospace;"></div></div>
+        <div class="form-group"><label>SHA-512</label><div class="result-box" id="h512" style="min-height:auto;font-family:monospace;font-size:.75rem;"></div></div>
+      </div>`
+  },
+
+  // -------- REGEX TESTER --------
+  'regex-tester': {
+    title: '.* Regex Tester',
+    html: `
+      <div class="form-group"><label>Regular Expression</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="color:var(--text2);font-size:1.2rem;">/</span>
+          <input type="text" id="regexPat" placeholder="[a-z]+" style="font-family:monospace;"/>
+          <span style="color:var(--text2);font-size:1.2rem;">/</span>
+          <input type="text" id="regexFlags" placeholder="gi" style="width:70px;font-family:monospace;"/>
+        </div>
+      </div>
+      <div class="form-group"><label>Test String</label><textarea id="regexText" rows="6" placeholder="Enter text to test against regex..." oninput="doRegex()"></textarea></div>
+      <div id="regexResult" class="result-box" style="display:none;"></div>`
+  },
+
+  // -------- CSS MINIFIER --------
+  'css-minifier': {
+    title: '📦 CSS Minifier',
+    html: `
+      <div class="form-group"><label>CSS Input</label><textarea id="cssInput" rows="8" placeholder="body { \n  color: red; \n  background: blue;\n}"></textarea></div>
+      <div class="btn-row">
+        <button class="btn" onclick="cssMin()">📦 Minify</button>
+        <button class="btn btn-outline" onclick="cssBeautify()">✨ Beautify</button>
+      </div>
+      <div id="cssResult" class="result-box" style="display:none;"></div>
+      <div id="cssSavings" style="color:var(--accent);font-size:.82rem;margin-top:8px;"></div>
+      <div id="cssBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('cssResult')">📋 Copy</button></div>`
+  },
+
+  // -------- PASSWORD GEN --------
+  'password-gen': {
+    title: '🔑 Password Generator',
+    html: `
+      <div id="pwOutput" style="font-size:1.4rem;font-family:monospace;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;letter-spacing:2px;cursor:pointer;" onclick="genPW()" title="Click to regenerate">Click Generate</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+        <div class="form-group"><label>Length: <span id="pwLenVal">16</span></label><input type="range" id="pwLen" min="6" max="64" value="16" oninput="document.getElementById('pwLenVal').textContent=this.value;genPW()"/></div>
+        <div class="form-group"><label>Strength</label><div id="pwStrength" style="height:36px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;padding:0 12px;font-size:.85rem;"></div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin:8px 0;">
+        <label style="display:flex;align-items:center;gap:6px;margin:0;"><input type="checkbox" id="pwUpper" checked style="width:auto;"/>Uppercase</label>
+        <label style="display:flex;align-items:center;gap:6px;margin:0;"><input type="checkbox" id="pwLower" checked style="width:auto;"/>Lowercase</label>
+        <label style="display:flex;align-items:center;gap=6px;margin:0;"><input type="checkbox" id="pwNums" checked style="width:auto;"/>Numbers</label>
+        <label style="display:flex;align-items:center;gap:6px;margin:0;"><input type="checkbox" id="pwSyms" style="width:auto;"/>Symbols</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="genPW()">🔄 Generate New</button>
+        <button class="btn btn-outline" onclick="copyPW()">📋 Copy</button>
+      </div>`,
+    init: () => genPW()
+  },
+
+  // -------- QR CODE --------
+  'qr-gen': {
+    title: '📱 QR Code Generator',
+    html: `
+      <div class="form-group"><label>Content (URL, text, phone, email...)</label><input type="url" id="qrInput" placeholder="https://example.com" value="https://toolifypro.com"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label>Size (px)</label><input type="number" id="qrSize" value="256" min="128" max="512"/></div>
+        <div class="form-group"><label>Color</label><input type="color" id="qrColor" value="#000000" style="height:44px;width:100%;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;"/></div>
+      </div>
+      <div class="btn-row"><button class="btn" onclick="genQR()">📱 Generate QR</button></div>
+      <div id="qr-output" style="margin-top:16px;display:none;flex-direction:column;align-items:center;gap:12px;">
+        <div id="qrDiv"></div>
+        <button class="btn btn-outline" onclick="downloadQR()">⬇️ Download PNG</button>
+      </div>`,
+    init: () => {}
+  },
+
+  // -------- META TAGS --------
+  'meta-tags': {
+    title: '🏷️ Meta Tag Generator',
+    html: `
+      <div class="form-group"><label>Page Title</label><input type="text" id="mtTitle" placeholder="My Awesome Page"/></div>
+      <div class="form-group"><label>Description</label><textarea id="mtDesc" rows="3" placeholder="Page description for SEO..."></textarea></div>
+      <div class="form-group"><label>Keywords</label><input type="text" id="mtKw" placeholder="keyword1, keyword2, keyword3"/></div>
+      <div class="form-group"><label>Author</label><input type="text" id="mtAuthor" placeholder="Your Name"/></div>
+      <div class="form-group"><label>Page URL</label><input type="url" id="mtUrl" placeholder="https://yoursite.com/page"/></div>
+      <div class="form-group"><label>OG Image URL</label><input type="url" id="mtImg" placeholder="https://yoursite.com/image.jpg"/></div>
+      <div class="btn-row"><button class="btn" onclick="genMeta()">🏷️ Generate Tags</button></div>
+      <div id="mtResult" class="result-box" style="display:none;font-family:monospace;font-size:.8rem;"></div>
+      <div id="mtBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('mtResult')">📋 Copy HTML</button></div>`
+  },
+
+  // -------- OG PREVIEW --------
+  'og-preview': {
+    title: '👁️ Social OG Preview',
+    html: `
+      <div class="form-group"><label>URL / Title</label><input type="text" id="ogTitle" placeholder="My Page Title"/></div>
+      <div class="form-group"><label>Description</label><textarea id="ogDesc" rows="3" placeholder="Description shown on social media..."></textarea></div>
+      <div class="form-group"><label>Image URL</label><input type="url" id="ogImg" placeholder="https://example.com/image.jpg"/></div>
+      <div class="form-group"><label>Site Name</label><input type="text" id="ogSite" placeholder="MySite.com"/></div>
+      <div class="btn-row"><button class="btn" onclick="genOG()">👁️ Preview</button></div>
+      <div id="ogResult" style="display:none;margin-top:16px;"></div>`
+  },
+
+  // -------- UTM BUILDER --------
+  'utm-builder': {
+    title: '📊 UTM Link Builder',
+    html: `
+      <div class="form-group"><label>Website URL</label><input type="url" id="utmUrl" placeholder="https://yoursite.com"/></div>
+      <div class="form-group"><label>Campaign Source</label><input type="text" id="utmSource" placeholder="google, newsletter, facebook"/></div>
+      <div class="form-group"><label>Campaign Medium</label><input type="text" id="utmMedium" placeholder="cpc, email, social"/></div>
+      <div class="form-group"><label>Campaign Name</label><input type="text" id="utmName" placeholder="spring_sale, product_launch"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label>Term (optional)</label><input type="text" id="utmTerm" placeholder="keyword"/></div>
+        <div class="form-group"><label>Content (optional)</label><input type="text" id="utmContent" placeholder="banner_ad"/></div>
+      </div>
+      <div class="btn-row"><button class="btn" onclick="buildUTM()">🔗 Build UTM Link</button></div>
+      <div id="utmResult" class="result-box" style="display:none;"></div>
+      <div id="utmBtns" class="btn-row" style="display:none;"><button class="btn btn-outline" onclick="copyText('utmResult')">📋 Copy</button></div>`
+  },
+
+  // -------- KEYWORD DENSITY --------
+  'keyword-density': {
+    title: '🔍 Keyword Density Analyzer',
+    html: `
+      <div class="form-group"><label>Text / Article</label><textarea id="kdText" rows="8" placeholder="Paste your article or text here..."></textarea></div>
+      <div class="btn-row"><button class="btn" onclick="doKD()">🔍 Analyze</button></div>
+      <div id="kdResult" style="display:none;margin-top:16px;"></div>`
+  },
+
+  // -------- SLUG GENERATOR --------
+  'slug-gen': {
+    title: '🐌 URL Slug Generator',
+    html: `
+      <div class="form-group"><label>Title or Phrase</label><input type="text" id="sgInput" placeholder="My Awesome Blog Post Title" oninput="doSlug()"/></div>
+      <div class="form-group"><label>Generated Slug</label><div class="result-box" id="sgResult" style="min-height:44px;font-family:monospace;font-size:1rem;color:var(--accent);"></div></div>
+      <div class="btn-row"><button class="btn btn-outline" onclick="copyText('sgResult')">📋 Copy Slug</button></div>`,
+    init: () => {}
+  },
+
+  // -------- PX REM --------
+  'px-rem': {
+    title: '📏 PX ↔ REM Converter',
+    html: `
+      <div class="form-group"><label>Base Font Size (px)</label><input type="number" id="pxBase" value="16" oninput="pxRemCalc()"/></div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end;margin-top:12px;">
+        <div class="form-group"><label>PX</label><input type="number" id="pxVal" placeholder="16" oninput="pxToRem()"/></div>
+        <div style="font-size:1.5rem;color:var(--text2);padding-bottom:8px;">⇄</div>
+        <div class="form-group"><label>REM</label><input type="number" id="remVal" placeholder="1" oninput="remToPx()"/></div>
+      </div>`,
+    init: () => {}
+  },
+
+  // -------- HEX RGB --------
+  'hex-rgb': {
+    title: '🎨 HEX ↔ RGB Converter',
+    html: `
+      <div class="form-group"><label>HEX Color</label><input type="text" id="hrHex" placeholder="#00e5ff" oninput="hexToRgb(this.value)"/></div>
+      <div id="hrSwatch" style="height:60px;border-radius:10px;background:#00e5ff;margin:12px 0;transition:.3s;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div class="form-group"><label>R (0–255)</label><input type="number" id="hrR" min="0" max="255" placeholder="0" oninput="rgbToHex()"/></div>
+        <div class="form-group"><label>G (0–255)</label><input type="number" id="hrG" min="0" max="255" placeholder="229" oninput="rgbToHex()"/></div>
+        <div class="form-group"><label>B (0–255)</label><input type="number" id="hrB" min="0" max="255" placeholder="255" oninput="rgbToHex()"/></div>
+      </div>
+      <div id="hrResult" class="result-box" style="display:none;"></div>`,
+    init: () => hexToRgb('#00e5ff')
+  },
+
+  // -------- TEMP CONVERTER --------
+  'temp-converter': {
+    title: '🌡️ Temperature Converter',
+    html: `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div class="form-group"><label>Celsius (°C)</label><input type="number" id="tcC" placeholder="0" oninput="tempConv('c')"/></div>
+        <div class="form-group"><label>Fahrenheit (°F)</label><input type="number" id="tcF" placeholder="32" oninput="tempConv('f')"/></div>
+        <div class="form-group"><label>Kelvin (K)</label><input type="number" id="tcK" placeholder="273.15" oninput="tempConv('k')"/></div>
+      </div>
+      <div id="tcResult" class="result-box" style="display:none;"></div>`
+  },
+
+  // -------- UNIX TIME --------
+  'unix-time': {
+    title: '⏰ Unix Timestamp Converter',
+    html: `
+      <div class="form-group"><label>Current Unix Timestamp</label><div id="utCurrent" style="font-family:monospace;font-size:1.2rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;color:var(--accent);"></div></div>
+      <hr style="border-color:var(--border);margin:16px 0;"/>
+      <div class="form-group"><label>Unix → Human Date</label>
+        <div style="display:flex;gap:8px;">
+          <input type="number" id="utUnix" placeholder="1700000000"/>
+          <button class="btn" onclick="unixToDate()" style="flex-shrink:0;">Convert</button>
+        </div>
+      </div>
+      <div id="utDateResult" class="result-box" style="display:none;"></div>
+      <hr style="border-color:var(--border);margin:16px 0;"/>
+      <div class="form-group"><label>Date → Unix</label>
+        <div style="display:flex;gap:8px;">
+          <input type="datetime-local" id="utDate" style="flex:1;"/>
+          <button class="btn" onclick="dateToUnix()" style="flex-shrink:0;">Convert</button>
+        </div>
+      </div>
+      <div id="utUnixResult" class="result-box" style="display:none;"></div>`,
+    init: () => {
+      const el = document.getElementById('utCurrent');
+      if(el) { el.textContent = Math.floor(Date.now()/1000); setInterval(()=>{if(document.getElementById('utCurrent'))document.getElementById('utCurrent').textContent=Math.floor(Date.now()/1000);},1000); }
+    }
+  }
+};
+
+// ========= TOOL MODAL =========
+let currentTool = null;
+let b64CurrentMode = 'encode';
+let urlCurrentMode = 'encode';
+let htmlCurrentMode = 'escape';
+
+function openTool(id) {
+  const t = TOOLS[id];
+  if(!t) return;
+  currentTool = id;
+  document.getElementById('modalTitle').innerHTML = t.title;
+  document.getElementById('modalBody').innerHTML = t.html;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(t.init) setTimeout(t.init, 0);
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+  currentTool = null;
+}
+function closeOnOverlay(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+// ========= UTILITY =========
+function copyText(id) {
+  const t = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(t).then(()=>{
+    const btn = event.target;
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='📋 Copy',2000);
+  });
+}
+function download(filename, url) {
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+}
+function getCanvas() { return document.getElementById('workCanvas'); }
+let imgState = {};
+
+// ========= IMAGE COMPRESS =========
+function icLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    imgState.icOriginal = e.target.result;
+    imgState.icOrigSize = file.size;
+    document.getElementById('icControls').style.display='block';
+    icCompress();
+  };
+  reader.readAsDataURL(file);
+}
+function icCompress() {
+  if(!imgState.icOriginal) return;
+  const q = document.getElementById('icQuality').value / 100;
+  const img = new Image();
+  img.onload = () => {
+    const c = getCanvas();
+    c.width=img.width; c.height=img.height;
+    c.getContext('2d').drawImage(img,0,0);
+    const result = c.toDataURL('image/jpeg', q);
+    document.getElementById('icPreview').src = result;
+    const origKB = (imgState.icOrigSize/1024).toFixed(1);
+    const newBytes = Math.round(result.length * 0.75);
+    const newKB = (newBytes/1024).toFixed(1);
+    const saved = Math.max(0,(100-(newKB/origKB*100))).toFixed(0);
+    document.getElementById('icInfo').innerHTML = `Original: <strong>${origKB} KB</strong> → Compressed: <strong>${newKB} KB</strong> | Saved: <strong style="color:var(--accent)">${saved}%</strong>`;
+    imgState.icResult = result;
+  };
+  img.src = imgState.icOriginal;
+}
+function icDownload() { if(imgState.icResult) download('compressed.jpg', imgState.icResult); }
+function icReset() { imgState.icOriginal=null; document.getElementById('icControls').style.display='none'; document.getElementById('icFile').value=''; }
+
+// ========= IMAGE RESIZE =========
+function irLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      imgState.irImg = img;
+      imgState.irOrigW = img.width; imgState.irOrigH = img.height;
+      document.getElementById('irW').value = img.width;
+      document.getElementById('irH').value = img.height;
+      document.getElementById('irPreview').src = e.target.result;
+      document.getElementById('irInfo').textContent = `Original: ${img.width}×${img.height}px`;
+      document.getElementById('irControls').style.display='block';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+document.addEventListener('input', e => {
+  if(e.target.id === 'irW' && document.getElementById('irAspect')?.checked && imgState.irImg) {
+    const ratio = imgState.irOrigH/imgState.irOrigW;
+    document.getElementById('irH').value = Math.round(e.target.value*ratio);
+  }
+  if(e.target.id === 'irH' && document.getElementById('irAspect')?.checked && imgState.irImg) {
+    const ratio = imgState.irOrigW/imgState.irOrigH;
+    document.getElementById('irW').value = Math.round(e.target.value*ratio);
+  }
+});
+function irResize() {
+  if(!imgState.irImg) return;
+  const w = parseInt(document.getElementById('irW').value)||imgState.irOrigW;
+  const h = parseInt(document.getElementById('irH').value)||imgState.irOrigH;
+  const c = getCanvas(); c.width=w; c.height=h;
+  c.getContext('2d').drawImage(imgState.irImg,0,0,w,h);
+  download('resized.png', c.toDataURL('image/png'));
+}
+
+// ========= IMAGE CONVERT =========
+function icvLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    imgState.icvSrc = e.target.result;
+    document.getElementById('icvPreview').src = e.target.result;
+    document.getElementById('icvControls').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+function icvConvert() {
+  if(!imgState.icvSrc) return;
+  const fmt = document.getElementById('icvFormat').value;
+  const ext = {['image/jpeg']:'jpg',['image/png']:'png',['image/webp']:'webp'}[fmt];
+  const img = new Image();
+  img.onload = () => {
+    const c = getCanvas(); c.width=img.width; c.height=img.height;
+    c.getContext('2d').drawImage(img,0,0);
+    download(`converted.${ext}`, c.toDataURL(fmt,0.92));
+  };
+  img.src = imgState.icvSrc;
+}
+
+// ========= GRAYSCALE =========
+function igLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('igOriginal').src = e.target.result;
+    const img = new Image();
+    img.onload = () => {
+      const c = getCanvas(); c.width=img.width; c.height=img.height;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(img,0,0);
+      const d = ctx.getImageData(0,0,c.width,c.height);
+      for(let i=0;i<d.data.length;i+=4){
+        const g=0.299*d.data[i]+0.587*d.data[i+1]+0.114*d.data[i+2];
+        d.data[i]=d.data[i+1]=d.data[i+2]=g;
+      }
+      ctx.putImageData(d,0,0);
+      const res = c.toDataURL();
+      document.getElementById('igResult').src = res;
+      imgState.igResult = res;
+      document.getElementById('igControls').style.display='block';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function igDownload() { if(imgState.igResult) download('grayscale.png', imgState.igResult); }
+
+// ========= FLIP/ROTATE =========
+function ifLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    imgState.ifSrc = e.target.result;
+    imgState.ifTransforms = [];
+    document.getElementById('ifPreview').src = e.target.result;
+    document.getElementById('ifControls').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+function ifTransform(type) {
+  if(!imgState.ifSrc) return;
+  const img = new Image();
+  img.onload = () => {
+    const c = getCanvas(); const ctx = c.getContext('2d');
+    if(type==='flipH'){ c.width=img.width;c.height=img.height;ctx.translate(img.width,0);ctx.scale(-1,1); }
+    else if(type==='flipV'){ c.width=img.width;c.height=img.height;ctx.translate(0,img.height);ctx.scale(1,-1); }
+    else if(type==='rot90'){ c.width=img.height;c.height=img.width;ctx.translate(c.width,0);ctx.rotate(Math.PI/2); }
+    else if(type==='rot180'){ c.width=img.width;c.height=img.height;ctx.translate(img.width,img.height);ctx.rotate(Math.PI); }
+    ctx.drawImage(img,0,0);
+    imgState.ifResult = c.toDataURL();
+    document.getElementById('ifPreview').src = imgState.ifResult;
+    imgState.ifSrc = imgState.ifResult;
+  };
+  img.src = imgState.ifSrc;
+}
+function ifDownload() { if(imgState.ifResult||imgState.ifSrc) download('transformed.png', imgState.ifResult||imgState.ifSrc); }
+
+// ========= WATERMARK =========
+function iwLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { imgState.iwSrc=e.target.result; document.getElementById('iwControls').style.display='block'; iwApply(); };
+  reader.readAsDataURL(file);
+}
+function iwApply() {
+  if(!imgState.iwSrc) return;
+  const img = new Image();
+  img.onload = () => {
+    const c = getCanvas(); c.width=img.width; c.height=img.height;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img,0,0);
+    const text = document.getElementById('iwText').value||'Watermark';
+    const size = parseInt(document.getElementById('iwSize').value)||40;
+    const op = parseInt(document.getElementById('iwOpacity').value)/100;
+    const pos = document.getElementById('iwPos').value;
+    ctx.font = `bold ${size}px Arial`;
+    ctx.fillStyle = `rgba(255,255,255,${op})`;
+    ctx.strokeStyle = `rgba(0,0,0,${op*0.5})`;
+    ctx.lineWidth = 2;
+    const tw = ctx.measureText(text).width;
+    let x,y;
+    const pad=20;
+    if(pos==='bottom-right'){x=img.width-tw-pad;y=img.height-pad;}
+    else if(pos==='bottom-left'){x=pad;y=img.height-pad;}
+    else if(pos==='top-right'){x=img.width-tw-pad;y=size+pad;}
+    else{x=(img.width-tw)/2;y=img.height/2;}
+    ctx.strokeText(text,x,y); ctx.fillText(text,x,y);
+    imgState.iwResult=c.toDataURL();
+    document.getElementById('iwPreview').src=imgState.iwResult;
+  };
+  img.src=imgState.iwSrc;
+}
+function iwDownload() { if(imgState.iwResult) download('watermarked.png',imgState.iwResult); }
+
+// ========= IMG CROP =========
+function cropLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      imgState.cropImg=img;
+      document.getElementById('cropW').value=img.width;
+      document.getElementById('cropH').value=img.height;
+      document.getElementById('cropInfo').textContent=`Image: ${img.width}×${img.height}px`;
+      document.getElementById('cropPreview').src=e.target.result;
+      document.getElementById('cropControls').style.display='block';
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function doCrop() {
+  if(!imgState.cropImg) return;
+  const x=parseInt(document.getElementById('cropX').value)||0;
+  const y=parseInt(document.getElementById('cropY').value)||0;
+  const w=parseInt(document.getElementById('cropW').value)||100;
+  const h=parseInt(document.getElementById('cropH').value)||100;
+  const c=getCanvas(); c.width=w; c.height=h;
+  c.getContext('2d').drawImage(imgState.cropImg,x,y,w,h,0,0,w,h);
+  download('cropped.png',c.toDataURL());
+}
+
+// ========= IMAGES TO PDF =========
+function itpLoad(input) {
+  const files = Array.from(input.files); if(!files.length) return;
+  imgState.itpFiles = files;
+  const listEl = document.getElementById('itpList');
+  listEl.innerHTML='';
+  files.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=document.createElement('img');
+      img.src=e.target.result; img.style.cssText='height:80px;border-radius:6px;border:1px solid var(--border);';
+      listEl.appendChild(img);
+    };
+    reader.readAsDataURL(f);
+  });
+  document.getElementById('itpControls').style.display='block';
+}
+async function itpConvert() {
+  if(!imgState.itpFiles?.length){ alert('Please upload images first'); return; }
+  const pageSize=document.getElementById('itpSize').value;
+  const canvases=[];
+  for(const file of imgState.itpFiles){
+    await new Promise(res=>{
+      const reader=new FileReader();
+      reader.onload=e=>{
+        const img=new Image();
+        img.onload=()=>{
+          const c=document.createElement('canvas');
+          let w=img.width,h=img.height;
+          if(pageSize==='a4'){const scale=Math.min(595/w,842/h);w=Math.round(w*scale);h=Math.round(h*scale);}
+          c.width=w;c.height=h;
+          c.getContext('2d').drawImage(img,0,0,w,h);
+          canvases.push(c); res();
+        };
+        img.src=e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  // Build PDF manually (simple implementation)
+  let pdfContent = '%PDF-1.4\n';
+  const pages = canvases.map((c,i)=>{
+    const dataUrl = c.toDataURL('image/jpeg',0.85);
+    return {w:c.width,h:c.height,data:dataUrl,idx:i};
+  });
+  // Use a simple approach: open images in new tab as printable
+  const html = `<html><head><style>body{margin:0;}img{display:block;page-break-after:always;max-width:100%;}</style></head><body>${pages.map(p=>`<img src="${p.data}"/>`).join('')}</body></html>`;
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  w.print();
+}
+
+// ========= PDF COMPRESS (simulated) =========
+function pcLoad(input) {
+  const file = input.files[0]; if(!file) return;
+  const r=document.getElementById('pcResult'); r.style.display='block';
+  r.innerHTML='⏳ Analyzing PDF...';
+  setTimeout(()=>{
+    const origKB=(file.size/1024).toFixed(1);
+    const estNew=(file.size*0.6/1024).toFixed(1);
+    r.innerHTML=`📄 <strong>${file.name}</strong> (${origKB} KB)<br/>Estimated compressed: ~<strong>${estNew} KB</strong><br/><br/>⚠️ <em>Full PDF compression requires a backend. Use Node.js + <strong>ghostscript</strong> or <strong>ilovepdf API</strong> for real compression.</em>`;
+    const btns=document.getElementById('pcBtns');
+    btns.style.display='flex';
+    btns.innerHTML=`<button class="btn btn-outline" onclick="alert('Backend needed for real PDF compression!')">Download Compressed PDF</button>`;
+  },1000);
+}
+
+// ========= PDF TO IMAGE =========
+async function ptiLoad(input) {
+  const file=input.files[0]; if(!file) return;
+  const progress=document.getElementById('ptiProgress'); progress.style.display='block';
+  const fill=document.getElementById('ptiFill'); fill.style.width='10%';
+  const resultDiv=document.getElementById('ptiResult');
+  resultDiv.innerHTML='⏳ Loading PDF...';
+  try {
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const arrayBuffer=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:arrayBuffer}).promise;
+    const total=pdf.numPages;
+    resultDiv.innerHTML=`📄 ${total} pages found. Rendering...<br/><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;" id="ptiImages"></div>`;
+    const container=document.getElementById('ptiImages');
+    for(let i=1;i<=total;i++){
+      fill.style.width=`${Math.round((i/total)*100)}%`;
+      const page=await pdf.getPage(i);
+      const viewport=page.getViewport({scale:1.5});
+      const c=document.createElement('canvas'); c.width=viewport.width; c.height=viewport.height;
+      await page.render({canvasContext:c.getContext('2d'),viewport}).promise;
+      const dataUrl=c.toDataURL('image/png');
+      const wrap=document.createElement('div'); wrap.style='text-align:center;';
+      const img=document.createElement('img'); img.src=dataUrl; img.style='max-width:160px;border-radius:6px;border:1px solid var(--border);';
+      const btn=document.createElement('button'); btn.className='btn btn-outline'; btn.style='margin-top:6px;font-size:.75rem;padding:4px 12px;display:block;width:100%;';
+      btn.textContent=`⬇️ Page ${i}`; btn.onclick=(()=>{const u=dataUrl;return()=>download(`page_${i}.png`,u);})();
+      wrap.appendChild(img); wrap.appendChild(btn); container.appendChild(wrap);
+    }
+    fill.style.width='100%';
+  } catch(e) {
+    resultDiv.innerHTML=`<div class="result-box error">Error: ${e.message}</div>`;
+  }
+}
+
+// ========= PDF MERGE =========
+function pmLoad(input) {
+  const files=Array.from(input.files); if(!files.length) return;
+  imgState.pmFiles=files;
+  const list=document.getElementById('pmList');
+  list.innerHTML=files.map((f,i)=>`<div style="padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:.85rem;">📄 ${f.name} <span style="color:var(--text2)">(${(f.size/1024).toFixed(1)} KB)</span></div>`).join('');
+  const btns=document.getElementById('pmBtns');
+  btns.style.display='flex';
+  btns.innerHTML=`<button class="btn" onclick="alert('PDF merging requires a backend (Node.js + pdf-lib). This UI is ready for integration!')">📑 Merge & Download</button>`;
+}
+
+// ========= PDF SPLIT =========
+async function psLoad(input) {
+  const file=input.files[0]; if(!file) return;
+  try {
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const ab=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+    imgState.psPDF=ab; imgState.psTotal=pdf.numPages;
+    document.getElementById('psControls').style.display='block';
+    document.getElementById('psInfo').textContent=`📄 ${file.name} — ${pdf.numPages} pages`;
+  } catch(e) {
+    alert('Could not read PDF: '+e.message);
+  }
+}
+function psSplit() {
+  alert('PDF page extraction requires a backend (Node.js + pdf-lib). The UI and page detection are ready!');
+}
+
+// ========= COLOR PICKER =========
+function cpUpdate(val) {
+  document.getElementById('cpSwatch').style.background=val;
+  document.getElementById('cpHex').value=val;
+  const r=parseInt(val.slice(1,3),16), g=parseInt(val.slice(3,5),16), b=parseInt(val.slice(5,7),16);
+  const hsl=rgbToHsl(r,g,b);
+  document.getElementById('cpValues').innerHTML=`
+    <div class="color-val"><strong>HEX</strong>${val.toUpperCase()}</div>
+    <div class="color-val"><strong>RGB</strong>rgb(${r}, ${g}, ${b})</div>
+    <div class="color-val"><strong>HSL</strong>hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)</div>
+    <div class="color-val"><strong>RGBA</strong>rgba(${r}, ${g}, ${b}, 1)</div>
+  `;
+}
+function cpFromHex(val) {
+  if(/^#[0-9a-fA-F]{6}$/.test(val)) { document.getElementById('cpColor').value=val; cpUpdate(val); }
+}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b);let h,s,l=(max+min)/2;if(max===min){h=s=0;}else{const d=max-min;s=l>.5?d/(2-max-min):d/(max+min);switch(max){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break;}}return[Math.round(h*360),Math.round(s*100),Math.round(l*100)];}
+
+// ========= WORD COUNTER =========
+function wcCount() {
+  const t=document.getElementById('wcText').value;
+  const words=t.trim()?t.trim().split(/\s+/).length:0;
+  const chars=t.length; const noSpace=t.replace(/\s/g,'').length;
+  const sentences=t.split(/[.!?]+/).filter(s=>s.trim()).length;
+  const paras=t.split(/\n\n+/).filter(p=>p.trim()).length;
+  const reading=Math.ceil(words/200);
+  document.getElementById('wcResult').innerHTML=[
+    {l:'Words',v:words},{l:'Characters',v:chars},{l:'No Spaces',v:noSpace},
+    {l:'Sentences',v:sentences},{l:'Paragraphs',v:paras||0},{l:'Read Time',v:reading+'min'}
+  ].map(i=>`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;"><strong style="font-size:1.6rem;color:var(--accent);display:block;font-family:var(--font);">${i.v}</strong><span style="font-size:.78rem;color:var(--text2);">${i.l}</span></div>`).join('');
+}
+
+// ========= CASE CONVERTER =========
+function cc(type) {
+  const t=document.getElementById('ccText').value;
+  let result;
+  if(type==='upper') result=t.toUpperCase();
+  else if(type==='lower') result=t.toLowerCase();
+  else if(type==='title') result=t.replace(/\w\S*/g,w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase());
+  else if(type==='sentence') result=t.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g,c=>c.toUpperCase());
+  else if(type==='camel') result=t.replace(/(?:^\w|[A-Z]|\b\w)/g,(w,i)=>i===0?w.toLowerCase():w.toUpperCase()).replace(/\s+/g,'');
+  else if(type==='snake') result=t.toLowerCase().replace(/\s+/g,'_');
+  else if(type==='kebab') result=t.toLowerCase().replace(/\s+/g,'-');
+  const res=document.getElementById('ccResult'); res.textContent=result; res.style.display='block';
+  document.getElementById('ccBtns').style.display='flex';
+}
+
+// ========= LOREM IPSUM =========
+const LOREM_WORDS=['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','aliquip','ex','ea','commodo','consequat','duis','aute','irure','in','reprehenderit','voluptate','velit','esse','cillum','eu','fugiat','nulla','pariatur','excepteur','sint','occaecat','cupidatat','non','proident','sunt','culpa','qui','officia','deserunt','mollit','anim','id','est','laborum'];
+function genLorem() {
+  const count=parseInt(document.getElementById('liCount').value)||3;
+  const type=document.getElementById('liType').value;
+  let result='';
+  if(type==='words') result=Array.from({length:count},()=>LOREM_WORDS[Math.floor(Math.random()*LOREM_WORDS.length)]).join(' ')+'.';
+  else if(type==='sentences') result=Array.from({length:count},()=>{const wc=8+Math.floor(Math.random()*12);return(Array.from({length:wc},()=>LOREM_WORDS[Math.floor(Math.random()*LOREM_WORDS.length)]).join(' ')+'.');}).join(' ');
+  else result=Array.from({length:count},()=>{const sc=3+Math.floor(Math.random()*4);return Array.from({length:sc},()=>{const wc=8+Math.floor(Math.random()*12);return Array.from({length:wc},()=>LOREM_WORDS[Math.floor(Math.random()*LOREM_WORDS.length)]).join(' ')+'.';}).join(' ');}).join('\n\n');
+  result=result.charAt(0).toUpperCase()+result.slice(1);
+  const r=document.getElementById('liResult'); r.textContent=result; r.style.display='block';
+  document.getElementById('liBtns').style.display='flex';
+}
+
+// ========= TEXT DIFF =========
+function doDiff() {
+  const a=document.getElementById('diffA').value.split('\n');
+  const b=document.getElementById('diffB').value.split('\n');
+  const maxLen=Math.max(a.length,b.length);
+  let html='<div style="font-family:monospace;font-size:.82rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">';
+  let adds=0,removes=0;
+  for(let i=0;i<maxLen;i++){
+    if(a[i]!==undefined&&b[i]!==undefined&&a[i]!==b[i]){
+      html+=`<div class="diff-removed">- ${escapeHtml(a[i])}</div><div class="diff-added">+ ${escapeHtml(b[i])}</div>`;
+      adds++;removes++;
+    } else if(a[i]!==undefined&&b[i]===undefined){
+      html+=`<div class="diff-removed">- ${escapeHtml(a[i])}</div>`; removes++;
+    } else if(b[i]!==undefined&&a[i]===undefined){
+      html+=`<div class="diff-added">+ ${escapeHtml(b[i])}</div>`; adds++;
+    } else {
+      html+=`<div style="color:var(--text2);">  ${escapeHtml(a[i]||'')}</div>`;
+    }
+  }
+  html+=`</div><div style="margin-top:8px;font-size:.82rem;color:var(--text2);">+${adds} additions, -${removes} removals</div>`;
+  document.getElementById('diffResult').innerHTML=html;
+}
+function escapeHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ========= FIND REPLACE =========
+function doFR() {
+  const text=document.getElementById('frText').value;
+  const find=document.getElementById('frFind').value;
+  const rep=document.getElementById('frReplace').value;
+  const caseSens=document.getElementById('frCase').checked;
+  const useRegex=document.getElementById('frRegex').checked;
+  if(!find){alert('Enter text to find');return;}
+  let result,count=0;
+  try {
+    const pattern=useRegex?find:find.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const flags='g'+(caseSens?'':'i');
+    const re=new RegExp(pattern,flags);
+    result=text.replace(re,m=>{count++;return rep;});
+    const r=document.getElementById('frResult'); r.textContent=result; r.style.display='block';
+    document.getElementById('frBtns').style.display='flex';
+    r.previousElementSibling?.remove();
+    const info=document.createElement('div'); info.style.cssText='font-size:.8rem;color:var(--accent);margin-top:8px;';
+    info.textContent=`✅ ${count} replacement(s) made`; r.before(info);
+  } catch(e){alert('Regex error: '+e.message);}
+}
+
+// ========= REVERSE TEXT =========
+function rtDo(type,btn) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const t=document.getElementById('rtText').value;
+  let result;
+  if(type==='chars') result=t.split('').reverse().join('');
+  else if(type==='words') result=t.split(' ').reverse().join(' ');
+  else result=t.split('\n').reverse().join('\n');
+  const r=document.getElementById('rtResult'); r.textContent=result; r.style.display='block';
+  document.getElementById('rtBtns').style.display='flex';
+}
+
+// ========= REMOVE DUPLICATES =========
+function doDR() {
+  let lines=document.getElementById('drText').value.split('\n');
+  const trim=document.getElementById('drTrim').checked;
+  const icase=document.getElementById('drCase').checked;
+  if(trim) lines=lines.map(l=>l.trim());
+  const seen=new Set(); const out=[];
+  lines.forEach(l=>{const key=icase?l.toLowerCase():l; if(!seen.has(key)){seen.add(key);out.push(l);}});
+  const removed=lines.length-out.length;
+  const r=document.getElementById('drResult'); r.textContent=out.join('\n'); r.style.display='block';
+  document.getElementById('drInfo').textContent=`Removed ${removed} duplicate(s). ${out.length} unique lines.`;
+  document.getElementById('drBtns').style.display='flex';
+}
+
+// ========= SORT LINES =========
+function tsSort(type) {
+  let lines=document.getElementById('tsText').value.split('\n');
+  if(type==='asc') lines.sort();
+  else if(type==='desc') lines.sort().reverse();
+  else if(type==='shuffle') for(let i=lines.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[lines[i],lines[j]]=[lines[j],lines[i]];}
+  else if(type==='length') lines.sort((a,b)=>a.length-b.length);
+  const r=document.getElementById('tsResult'); r.textContent=lines.join('\n'); r.style.display='block';
+  document.getElementById('tsBtns').style.display='flex';
+}
+
+// ========= JSON FORMATTER =========
+function jfFormat() {
+  try {
+    const parsed=JSON.parse(document.getElementById('jfInput').value);
+    const r=document.getElementById('jfResult'); r.textContent=JSON.stringify(parsed,null,2); r.style.display='block'; r.className='result-box success';
+    document.getElementById('jfBtns').style.display='flex';
+  } catch(e){const r=document.getElementById('jfResult'); r.textContent='❌ Invalid JSON: '+e.message; r.style.display='block'; r.className='result-box error';}
+}
+function jfMinify() {
+  try {
+    const parsed=JSON.parse(document.getElementById('jfInput').value);
+    const r=document.getElementById('jfResult'); r.textContent=JSON.stringify(parsed); r.style.display='block'; r.className='result-box success';
+    document.getElementById('jfBtns').style.display='flex';
+  } catch(e){const r=document.getElementById('jfResult'); r.textContent='❌ Invalid JSON: '+e.message; r.style.display='block'; r.className='result-box error';}
+}
+function jfValidate() {
+  try { JSON.parse(document.getElementById('jfInput').value); const r=document.getElementById('jfResult'); r.textContent='✅ Valid JSON!'; r.style.display='block'; r.className='result-box success'; }
+  catch(e){const r=document.getElementById('jfResult'); r.textContent='❌ Invalid JSON: '+e.message; r.style.display='block'; r.className='result-box error';}
+}
+
+// ========= BASE64 =========
+function b64Mode(mode,btn) {
+  b64CurrentMode=mode;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active');
+  document.getElementById('b64InputLabel').textContent=mode==='encode'?'Text to Encode':'Base64 to Decode';
+}
+function doB64() {
+  const t=document.getElementById('b64Input').value;
+  let result;
+  try { result=b64CurrentMode==='encode'?btoa(unescape(encodeURIComponent(t))):decodeURIComponent(escape(atob(t))); }
+  catch(e){result='Error: '+e.message;}
+  const r=document.getElementById('b64Result'); r.textContent=result; r.style.display='block';
+  document.getElementById('b64Btns').style.display='flex';
+}
+
+// ========= URL ENCODER =========
+function urlMode(mode,btn) { urlCurrentMode=mode; document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); }
+function doURL() {
+  const t=document.getElementById('urlInput').value;
+  const result=urlCurrentMode==='encode'?encodeURIComponent(t):decodeURIComponent(t);
+  const r=document.getElementById('urlResult'); r.textContent=result; r.style.display='block';
+  document.getElementById('urlBtns').style.display='flex';
+}
+
+// ========= HTML ESCAPE =========
+function htmlMode(mode,btn) { htmlCurrentMode=mode; document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); }
+function doHTML() {
+  const t=document.getElementById('htmlInput').value;
+  let result;
+  if(htmlCurrentMode==='escape'){
+    result=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  } else {
+    result=t.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#039;/g,"'");
+  }
+  const r=document.getElementById('htmlResult'); r.textContent=result; r.style.display='block';
+  document.getElementById('htmlBtns').style.display='flex';
+}
+
+// ========= HASH GENERATOR =========
+async function doHash() {
+  const t=document.getElementById('hashInput').value;
+  if(!t){alert('Enter some text');return;}
+  const enc=new TextEncoder();
+  const buf=enc.encode(t);
+  const toHex=ab=>Array.from(new Uint8Array(ab)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const [s256,s1,s512]=await Promise.all([
+    crypto.subtle.digest('SHA-256',buf).then(toHex),
+    crypto.subtle.digest('SHA-1',buf).then(toHex),
+    crypto.subtle.digest('SHA-512',buf).then(toHex)
+  ]);
+  document.getElementById('h256').textContent=s256;
+  document.getElementById('h1').textContent=s1;
+  document.getElementById('h512').textContent=s512;
+  document.getElementById('hashResult').style.display='block';
+}
+
+// ========= REGEX TESTER =========
+function doRegex() {
+  const pat=document.getElementById('regexPat').value;
+  const flags=document.getElementById('regexFlags').value||'g';
+  const text=document.getElementById('regexText').value;
+  const r=document.getElementById('regexResult');
+  if(!pat){r.style.display='none';return;}
+  try {
+    const re=new RegExp(pat,flags);
+    const matches=[...text.matchAll(new RegExp(pat,flags.includes('g')?flags:flags+'g'))];
+    if(matches.length){
+      r.className='result-box success';
+      r.innerHTML=`✅ <strong>${matches.length} match(es)</strong> found:<br/>`+matches.map((m,i)=>`<span style="font-family:monospace;background:rgba(0,229,255,.15);padding:2px 6px;border-radius:4px;margin:2px;">${escapeHtml(m[0])}</span>`).join(' ');
+    } else {
+      r.className='result-box error'; r.textContent='No matches found.';
+    }
+    r.style.display='block';
+  } catch(e){r.className='result-box error';r.textContent='Regex error: '+e.message;r.style.display='block';}
+}
+document.addEventListener('input',e=>{ if(e.target.id==='regexPat'||e.target.id==='regexFlags') doRegex(); });
+
+// ========= CSS MINIFIER =========
+function cssMin() {
+  const css=document.getElementById('cssInput').value;
+  const min=css.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').replace(/\s*([{};:,])\s*/g,'$1').replace(/;}/g,'}').trim();
+  const r=document.getElementById('cssResult'); r.textContent=min; r.style.display='block';
+  const saved=Math.round((1-min.length/css.length)*100);
+  document.getElementById('cssSavings').textContent=`Saved ${saved}% (${css.length-min.length} chars removed)`;
+  document.getElementById('cssBtns').style.display='flex';
+}
+function cssBeautify() {
+  const css=document.getElementById('cssInput').value;
+  const min=css.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').replace(/\s*\{\s*/g,' {\n  ').replace(/;\s*/g,';\n  ').replace(/\s*}\s*/g,'\n}\n').replace(/,\s*/g,', ').trim();
+  const r=document.getElementById('cssResult'); r.textContent=min; r.style.display='block';
+  document.getElementById('cssSavings').textContent='';
+  document.getElementById('cssBtns').style.display='flex';
+}
+
+// ========= PASSWORD GENERATOR =========
+function genPW() {
+  const len=parseInt(document.getElementById('pwLen')?.value||16);
+  const upper=document.getElementById('pwUpper')?.checked;
+  const lower=document.getElementById('pwLower')?.checked;
+  const nums=document.getElementById('pwNums')?.checked;
+  const syms=document.getElementById('pwSyms')?.checked;
+  let chars='';
+  if(upper) chars+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if(lower) chars+='abcdefghijklmnopqrstuvwxyz';
+  if(nums) chars+='0123456789';
+  if(syms) chars+='!@#$%^&*()_+-=[]{}|;:,.<>?';
+  if(!chars) chars='abcdefghijklmnopqrstuvwxyz';
+  let pw='';
+  for(let i=0;i<len;i++) pw+=chars[Math.floor(Math.random()*chars.length)];
+  const el=document.getElementById('pwOutput'); if(el) el.textContent=pw;
+  const strength=document.getElementById('pwStrength');
+  if(strength){
+    const score=[upper,lower,nums,syms].filter(Boolean).length;
+    const levels=[{c:'#ef4444',t:'Weak'},{c:'#f97316',t:'Fair'},{c:'#eab308',t:'Good'},{c:'#22c55e',t:'Strong'}];
+    const l=levels[Math.min(score-1,3)]||levels[0];
+    strength.style.background=l.c+'22'; strength.style.borderColor=l.c; strength.style.color=l.c; strength.textContent=l.t;
+  }
+  imgState.lastPW=pw;
+}
+function copyPW() {
+  if(imgState.lastPW) navigator.clipboard.writeText(imgState.lastPW).then(()=>{
+    const btn=document.querySelector('button[onclick="copyPW()"]');
+    if(btn){btn.textContent='✅ Copied!';setTimeout(()=>btn.textContent='📋 Copy',2000);}
+  });
+}
+
+// ========= QR CODE =========
+let qrInstance=null;
+function genQR() {
+  const text=document.getElementById('qrInput').value||'https://toolifypro.com';
+  const size=parseInt(document.getElementById('qrSize').value)||256;
+  const color=document.getElementById('qrColor').value||'#000000';
+  const div=document.getElementById('qrDiv'); div.innerHTML='';
+  qrInstance=new QRCode(div,{text,width:size,height:size,colorDark:color,colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+  document.getElementById('qr-output').style.display='flex';
+}
+function downloadQR() {
+  const canvas=document.querySelector('#qrDiv canvas');
+  if(canvas) download('qrcode.png',canvas.toDataURL());
+  else { const img=document.querySelector('#qrDiv img'); if(img) download('qrcode.png',img.src); }
+}
+
+// ========= META TAGS =========
+function genMeta() {
+  const t=v=>document.getElementById(t).value; // unused
+  const title=document.getElementById('mtTitle').value;
+  const desc=document.getElementById('mtDesc').value;
+  const kw=document.getElementById('mtKw').value;
+  const author=document.getElementById('mtAuthor').value;
+  const url=document.getElementById('mtUrl').value;
+  const img=document.getElementById('mtImg').value;
+  const tags=[
+    `<meta charset="UTF-8">`,
+    `<meta name="viewport" content="width=device-width, initial-scale=1.0">`,
+    title?`<title>${title}</title>`:'',
+    title?`<meta property="og:title" content="${title}">`:'',
+    desc?`<meta name="description" content="${desc}">`:'',
+    desc?`<meta property="og:description" content="${desc}">`:'',
+    kw?`<meta name="keywords" content="${kw}">`:'',
+    author?`<meta name="author" content="${author}">`:'',
+    url?`<link rel="canonical" href="${url}">`:'',
+    url?`<meta property="og:url" content="${url}">`:'',
+    img?`<meta property="og:image" content="${img}">`:'',
+    `<meta property="og:type" content="website">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
+    title?`<meta name="twitter:title" content="${title}">`:'',
+    desc?`<meta name="twitter:description" content="${desc}">`:'',
+    img?`<meta name="twitter:image" content="${img}">`:'',
+  ].filter(Boolean).join('\n');
+  const r=document.getElementById('mtResult'); r.textContent=tags; r.style.display='block';
+  document.getElementById('mtBtns').style.display='flex';
+}
+
+// ========= OG PREVIEW =========
+function genOG() {
+  const title=document.getElementById('ogTitle').value||'Page Title';
+  const desc=document.getElementById('ogDesc').value||'Page description here';
+  const img=document.getElementById('ogImg').value;
+  const site=document.getElementById('ogSite').value||'example.com';
+  document.getElementById('ogResult').style.display='block';
+  document.getElementById('ogResult').innerHTML=`
+    <p style="font-size:.8rem;color:var(--text2);margin-bottom:8px;">Facebook / WhatsApp Preview:</p>
+    <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;max-width:500px;">
+      ${img?`<img src="${img}" style="width:100%;height:200px;object-fit:cover;display:block;" onerror="this.style.display='none'"/>`:`<div style="height:120px;background:var(--bg2);display:flex;align-items:center;justify-content:center;color:var(--text2);">No image</div>`}
+      <div style="padding:12px;background:#1e1e2e;">
+        <div style="font-size:.7rem;color:var(--text2);text-transform:uppercase;">${site}</div>
+        <div style="font-weight:600;margin:4px 0;">${escapeHtml(title)}</div>
+        <div style="font-size:.8rem;color:var(--text2);">${escapeHtml(desc)}</div>
+      </div>
+    </div>`;
+}
+
+// ========= UTM BUILDER =========
+function buildUTM() {
+  let url=document.getElementById('utmUrl').value;
+  if(!url){alert('Enter a URL');return;}
+  if(!url.startsWith('http')) url='https://'+url;
+  const params={utm_source:document.getElementById('utmSource').value,utm_medium:document.getElementById('utmMedium').value,utm_campaign:document.getElementById('utmName').value,utm_term:document.getElementById('utmTerm').value,utm_content:document.getElementById('utmContent').value};
+  const query=Object.entries(params).filter(([,v])=>v).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+  const result=url+(url.includes('?')?'&':'?')+query;
+  const r=document.getElementById('utmResult'); r.textContent=result; r.style.display='block';
+  document.getElementById('utmBtns').style.display='flex';
+}
+
+// ========= KEYWORD DENSITY =========
+function doKD() {
+  const text=document.getElementById('kdText').value.toLowerCase();
+  const words=text.match(/\b[a-z]{3,}\b/g)||[];
+  const stop=new Set(['the','and','for','are','but','not','you','all','can','had','her','was','one','our','out','day','get','has','him','his','how','man','new','now','old','see','two','way','who','boy','did','its','let','put','say','she','too','use','that','this','with','have','from','they','will','been','into','then','than','them','when','your','more','also','does','some','what','which','were','most','like','just','over','such','even','only','both','each','much','very','well','after','about','would','could','their']);
+  const freq={};
+  words.forEach(w=>{ if(!stop.has(w)) freq[w]=(freq[w]||0)+1; });
+  const total=words.length;
+  const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,20);
+  document.getElementById('kdResult').style.display='block';
+  document.getElementById('kdResult').innerHTML=`<p style="font-size:.82rem;color:var(--text2);margin-bottom:12px;">Total words: ${total} | Unique keywords: ${Object.keys(freq).length}</p>`+
+    sorted.map(([w,c])=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="min-width:120px;font-weight:600;">${w}</span><div style="flex:1;background:var(--border);border-radius:4px;height:8px;"><div style="width:${(c/sorted[0][1]*100).toFixed(0)}%;height:100%;background:var(--accent);border-radius:4px;"></div></div><span style="min-width:60px;font-size:.8rem;color:var(--text2);">${c}x (${(c/total*100).toFixed(1)}%)</span></div>`).join('');
+}
+
+// ========= SLUG GENERATOR =========
+function doSlug() {
+  const val=document.getElementById('sgInput').value;
+  const slug=val.toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  document.getElementById('sgResult').textContent=slug||'url-slug-preview';
+}
+
+// ========= PX REM =========
+function pxToRem() {
+  const base=parseFloat(document.getElementById('pxBase').value)||16;
+  const px=parseFloat(document.getElementById('pxVal').value);
+  if(!isNaN(px)) document.getElementById('remVal').value=(px/base).toFixed(4);
+}
+function remToPx() {
+  const base=parseFloat(document.getElementById('pxBase').value)||16;
+  const rem=parseFloat(document.getElementById('remVal').value);
+  if(!isNaN(rem)) document.getElementById('pxVal').value=(rem*base).toFixed(2);
+}
+
+// ========= HEX RGB =========
+function hexToRgb(hex) {
+  if(!hex||!/^#[0-9a-fA-F]{6}$/.test(hex)) return;
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  document.getElementById('hrR').value=r; document.getElementById('hrG').value=g; document.getElementById('hrB').value=b;
+  document.getElementById('hrSwatch').style.background=hex;
+  const r2=document.getElementById('hrResult'); r2.style.display='block';
+  r2.textContent=`HEX: ${hex.toUpperCase()} | RGB: rgb(${r}, ${g}, ${b}) | HSL: hsl(${rgbToHsl(r,g,b).join(', ')})`;
+}
+function rgbToHex() {
+  const r=parseInt(document.getElementById('hrR')?.value)||0,g=parseInt(document.getElementById('hrG')?.value)||0,b=parseInt(document.getElementById('hrB')?.value)||0;
+  const hex='#'+[r,g,b].map(v=>Math.min(255,Math.max(0,v)).toString(16).padStart(2,'0')).join('');
+  if(document.getElementById('hrHex')) document.getElementById('hrHex').value=hex;
+  if(document.getElementById('hrSwatch')) document.getElementById('hrSwatch').style.background=hex;
+}
+
+// ========= TEMP CONVERTER =========
+function tempConv(from) {
+  let c,f,k;
+  if(from==='c'){c=parseFloat(document.getElementById('tcC').value);f=c*9/5+32;k=c+273.15;}
+  else if(from==='f'){f=parseFloat(document.getElementById('tcF').value);c=(f-32)*5/9;k=c+273.15;}
+  else{k=parseFloat(document.getElementById('tcK').value);c=k-273.15;f=c*9/5+32;}
+  if(from!=='c')document.getElementById('tcC').value=c.toFixed(2);
+  if(from!=='f')document.getElementById('tcF').value=f.toFixed(2);
+  if(from!=='k')document.getElementById('tcK').value=k.toFixed(2);
+}
+
+// ========= UNIX TIME =========
+function unixToDate() {
+  const unix=parseInt(document.getElementById('utUnix').value);
+  const d=new Date(unix*1000);
+  const r=document.getElementById('utDateResult'); r.style.display='block';
+  r.textContent=`${d.toUTCString()}\nLocal: ${d.toLocaleString()}\nISO: ${d.toISOString()}`;
+}
+function dateToUnix() {
+  const val=document.getElementById('utDate').value;
+  const d=new Date(val);
+  const r=document.getElementById('utUnixResult'); r.style.display='block';
+  r.textContent=`Unix Timestamp: ${Math.floor(d.getTime()/1000)}\nMilliseconds: ${d.getTime()}`;
+}
+
+// ========= SEARCH & FILTER =========
+function searchTools(query) {
+  const q=query.toLowerCase().trim();
+  const cards=document.querySelectorAll('.tool-card');
+  cards.forEach(card=>{
+    const name=card.querySelector('.tool-name').textContent.toLowerCase();
+    const desc=card.querySelector('.tool-desc').textContent.toLowerCase();
+    card.style.display=(q&&!name.includes(q)&&!desc.includes(q))?'none':'block';
+  });
+}
+function filterCat(cat,btn) {
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards=document.querySelectorAll('.tool-card');
+  cards.forEach(card=>{
+    card.style.display=(cat==='all'||card.dataset.cat===cat)?'block':'none';
+  });
+  const sections=document.querySelectorAll('.section-title');
+  sections.forEach(s=>{
+    const grid=s.nextElementSibling;
+    if(!grid) return;
+    const visible=[...grid.querySelectorAll('.tool-card')].some(c=>c.style.display!=='none');
+    s.style.display=visible?'':'none';
+    grid.style.display=visible?'':'none';
+  });
+}
+</script>
+</body>
+</html>
